@@ -267,7 +267,7 @@ export default function SocialFeed() {
         {/* Navigation */}
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-heart">Social Feed</h1>
-          <div className="flex gap-2">
+          <div className="hidden lg:flex gap-2">
             <Button variant="outline" onClick={() => navigate('/chat')}>
               <MessageCircle className="h-4 w-4 mr-2" />
               Chat
