@@ -116,7 +116,7 @@ const LoveGames = () => {
               <p className="text-muted-foreground">Fun ways to explore love and self-care</p>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="hidden lg:flex gap-2">
             <Link to="/dashboard">
               <Button variant="outline" className="flex items-center gap-2">
                 <Heart className="h-4 w-4" />
