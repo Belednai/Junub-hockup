@@ -65,12 +65,16 @@ export default function SocialFeed() {
 
       if (postsError) throw postsError;
 
+      console.log('Posts data:', postsData);
+
       // Get all unique user IDs from posts and comments
       const userIds = new Set<string>();
       postsData?.forEach(post => {
         userIds.add(post.user_id);
         post.post_comments?.forEach(comment => userIds.add(comment.user_id));
       });
+
+      console.log('User IDs to fetch profiles for:', Array.from(userIds));
 
       // Get profiles for all users
       const { data: profilesData, error: profilesError } = await supabase
@@ -80,11 +84,15 @@ export default function SocialFeed() {
 
       if (profilesError) throw profilesError;
 
+      console.log('Profiles data:', profilesData);
+
       // Create a map of user profiles
       const profilesMap = new Map();
       profilesData?.forEach(profile => {
         profilesMap.set(profile.user_id, profile);
       });
+
+      console.log('Profiles map:', profilesMap);
 
       // Combine posts with profile data
       const postsWithProfiles = postsData?.map(post => ({
@@ -97,6 +105,8 @@ export default function SocialFeed() {
         reactions: post.post_reactions,
         comments: post.post_comments
       }));
+
+      console.log('Posts with profiles:', postsWithProfiles);
 
       setPosts(postsWithProfiles || []);
     } catch (error) {

@@ -91,7 +91,7 @@ export const PostCard: React.FC<PostCardProps> = ({
           </Avatar>
           <div>
             <p className="font-semibold text-sm">
-              {post.profiles?.full_name || 'Anonymous'}
+              {post.profiles?.full_name || `User ${post.user_id.slice(0, 8)}`}
             </p>
             <p className="text-xs text-muted-foreground">
               {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
@@ -176,7 +176,7 @@ export const PostCard: React.FC<PostCardProps> = ({
             {post.comments?.map((comment) => (
               <div key={comment.id} className="flex gap-2 text-sm">
                 <span className="font-semibold">
-                  {comment.profiles?.full_name || 'Anonymous'}:
+                  {comment.profiles?.full_name || `User ${comment.user_id.slice(0, 8)}`}:
                 </span>
                 <span>{comment.content}</span>
               </div>
