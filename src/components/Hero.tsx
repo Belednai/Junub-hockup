@@ -65,10 +65,20 @@ export const Hero = () => {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               {user ? (
-                <Button className="btn-hero text-lg px-8 py-6 rounded-full">
-                  <Sparkles className="mr-2 h-5 w-5" />
-                  Get Daily Laughs
-                </Button>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link to="/dashboard">
+                    <Button className="btn-hero text-lg px-8 py-6 rounded-full">
+                      <Heart className="mr-2 h-5 w-5" />
+                      Your Love Dashboard
+                    </Button>
+                  </Link>
+                  <Link to="/games">
+                    <Button variant="outline" className="text-lg px-8 py-6 rounded-full border-2 hover:bg-accent/10">
+                      <Sparkles className="mr-2 h-5 w-5" />
+                      Play Love Games
+                    </Button>
+                  </Link>
+                </div>
               ) : (
                 <Link to="/auth">
                   <Button className="btn-hero text-lg px-8 py-6 rounded-full">
@@ -77,9 +87,6 @@ export const Hero = () => {
                   </Button>
                 </Link>
               )}
-              <Button variant="outline" className="text-lg px-8 py-6 rounded-full border-2 hover:bg-accent/10">
-                View Comic Tips
-              </Button>
             </div>
 
             <div className="text-center lg:text-left text-sm text-muted-foreground">
