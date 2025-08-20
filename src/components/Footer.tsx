@@ -44,7 +44,7 @@ export const Footer = () => {
         <div className="border-t border-border/50 mt-8 pt-8">
           <div className="text-center space-y-2">
             <p className="text-muted-foreground text-sm">
-              © 2024 Cheating App. Made with ❤️ and lots of coffee.
+              © 2025 Cheating App. Made with ❤️ and lots of coffee.
             </p>
             <p className="text-xs text-muted-foreground">
               <strong>Disclaimer:</strong> This app is for entertainment purposes only. 
