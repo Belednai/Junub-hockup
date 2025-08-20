@@ -17,7 +17,7 @@ export const Hero = () => {
               <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight">
                 The Ultimate
                 <span className="block gradient-text">Relationship</span>
-                <span className="block text-accent">Comedy App</span>
+                <span className="block text-accent">Cheating App</span>
               </h1>
               
               <p className="text-xl text-muted-foreground max-w-2xl">
