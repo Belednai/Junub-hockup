@@ -53,6 +53,12 @@ export function AppLayout({ children }: AppLayoutProps) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
+                    <Link to="/profile">
+                      <DropdownMenuItem>
+                        <User className="h-4 w-4 mr-2" />
+                        My Profile
+                      </DropdownMenuItem>
+                    </Link>
                     <DropdownMenuItem>
                       <Settings className="h-4 w-4 mr-2" />
                       Settings

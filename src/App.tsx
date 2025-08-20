@@ -9,6 +9,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import LoveGames from "./pages/LoveGames";
 import FindFriends from "./pages/FindFriends";
+import Profile from "./pages/Profile";
 import Chat from './pages/Chat';
 import SocialFeed from './pages/SocialFeed';
 import NotFound from "./pages/NotFound";
@@ -34,6 +35,7 @@ const App = () => (
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/games" element={<LoveGames />} />
                 <Route path="/find-friends" element={<FindFriends />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route path="/chat" element={<Chat />} />
                 <Route path="/chat/:userId" element={<Chat />} />
                 <Route path="/social" element={<SocialFeed />} />
