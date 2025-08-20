@@ -217,6 +217,11 @@ All colors MUST be HSL.
     @apply text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105;
   }
 
+  .btn-mood {
+    background: var(--gradient-comic);
+    @apply text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105;
+  }
+
   .speech-bubble {
     position: relative;
     border-radius: 1rem;
