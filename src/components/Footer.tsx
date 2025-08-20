@@ -9,7 +9,7 @@ export const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center justify-center md:justify-start gap-2">
               <Heart className="h-6 w-6 text-secondary wiggle" />
-              <span className="text-xl font-bold gradient-text">Cheating App</span>
+              <span className="text-xl font-bold gradient-text">Junub-hockup App</span>
             </div>
             <p className="text-muted-foreground">
               The ultimate relationship comedy app. Because love is better with laughter!
@@ -44,7 +44,7 @@ export const Footer = () => {
         <div className="border-t border-border/50 mt-8 pt-8">
           <div className="text-center space-y-2">
             <p className="text-muted-foreground text-sm">
-              © 2025 Cheating App. Made with ❤️ and lots of coffee.
+              © 2025 Junub-hockup App. Made with ❤️ and lots of coffee.
             </p>
             <p className="text-xs text-muted-foreground">
               <strong>Disclaimer:</strong> This app is for entertainment purposes only. 

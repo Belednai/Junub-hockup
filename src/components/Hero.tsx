@@ -14,13 +14,13 @@ export const Hero = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-center lg:justify-start gap-2 mb-4">
                 <Heart className="h-6 w-6 lg:h-8 lg:w-8 text-secondary wiggle" />
-                <span className="text-xl lg:text-2xl font-bold gradient-text">Cheating App</span>
+                <span className="text-xl lg:text-2xl font-bold gradient-text">Junub-hockup App</span>
               </div>
               
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
                 The Ultimate
                 <span className="block gradient-text">Relationship</span>
-                <span className="block text-accent">Cheating App</span>
+                <span className="block text-accent">Junub-hockup App</span>
               </h1>
               
               <p className="text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto lg:mx-0">
@@ -69,7 +69,7 @@ export const Hero = () => {
             <div className="float">
               <img 
                 src={heroImage} 
-                alt="Cute cartoon couple representing Cheating App users" 
+                alt="Cute cartoon couple representing Junub-hockup App users" 
                 className="w-full max-w-sm lg:max-w-lg mx-auto rounded-3xl shadow-comic"
               />
             </div>

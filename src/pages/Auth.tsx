@@ -86,7 +86,7 @@ const Auth = () => {
           
           <div className="flex items-center justify-center gap-2">
             <Heart className="h-8 w-8 text-secondary wiggle" />
-            <span className="text-2xl font-bold gradient-text">Cheating App</span>
+            <span className="text-2xl font-bold gradient-text">Junub-hockup App</span>
           </div>
           
           <h1 className="text-3xl font-bold text-foreground">
