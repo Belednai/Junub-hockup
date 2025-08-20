@@ -11,7 +11,7 @@ export const Hero = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-center lg:justify-start gap-2 mb-4">
                 <Heart className="h-8 w-8 text-secondary wiggle" />
-                <span className="text-2xl font-bold gradient-text">Love Hacks</span>
+                <span className="text-2xl font-bold gradient-text">Cheating App</span>
               </div>
               
               <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight">
@@ -48,7 +48,7 @@ export const Hero = () => {
             <div className="float">
               <img 
                 src={heroImage} 
-                alt="Cute cartoon couple representing Love Hacks app users" 
+                alt="Cute cartoon couple representing Cheating App users" 
                 className="w-full max-w-lg mx-auto rounded-3xl shadow-comic"
               />
             </div>
