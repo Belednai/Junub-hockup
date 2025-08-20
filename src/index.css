@@ -209,3 +209,83 @@ All colors MUST be HSL.
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-15px); }
 }
+
+/* Component-specific utilities */
+@layer components {
+  .btn-hero {
+    background: var(--gradient-hero);
+    @apply text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105;
+  }
+
+  .speech-bubble {
+    position: relative;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-bubble);
+  }
+
+  .speech-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 20px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid currentColor;
+  }
+
+  .shadow-comic {
+    box-shadow: var(--shadow-comic);
+  }
+
+  .shadow-bubble {
+    box-shadow: var(--shadow-bubble);
+  }
+}
+
+/* Animation utilities */
+@layer utilities {
+  .bounce-gentle {
+    animation: bounce-gentle 3s ease-in-out infinite;
+  }
+
+  .wiggle {
+    animation: wiggle 2s ease-in-out infinite;
+  }
+
+  .float {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  /* Mobile-first responsive utilities */
+  .mobile-safe-area {
+    @apply pb-16 lg:pb-0;
+  }
+
+  .container-responsive {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Text responsive utilities */
+  .text-responsive-xl {
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl;
+  }
+
+  .text-responsive-lg {
+    @apply text-xl sm:text-2xl md:text-3xl;
+  }
+
+  .text-responsive-base {
+    @apply text-base sm:text-lg;
+  }
+
+  /* Spacing responsive utilities */
+  .space-responsive {
+    @apply space-y-4 sm:space-y-6 lg:space-y-8;
+  }
+
+  .gap-responsive {
+    @apply gap-4 sm:gap-6 lg:gap-8;
+  }
+}

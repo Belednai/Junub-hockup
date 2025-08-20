@@ -14,6 +14,8 @@ import SocialFeed from './pages/SocialFeed';
 import NotFound from "./pages/NotFound";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AuthProvider } from "@/hooks/useAuth";
+import { AppLayout } from "@/components/AppLayout";
+import { MobileNavigation } from "@/components/MobileNavigation";
 
 const queryClient = new QueryClient();
 
@@ -25,18 +27,21 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/games" element={<LoveGames />} />
-              <Route path="/find-friends" element={<FindFriends />} />
-              <Route path="/chat" element={<Chat />} />
-              <Route path="/chat/:userId" element={<Chat />} />
-              <Route path="/social" element={<SocialFeed />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <AppLayout>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/games" element={<LoveGames />} />
+                <Route path="/find-friends" element={<FindFriends />} />
+                <Route path="/chat" element={<Chat />} />
+                <Route path="/chat/:userId" element={<Chat />} />
+                <Route path="/social" element={<SocialFeed />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </AppLayout>
+            <MobileNavigation />
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>
