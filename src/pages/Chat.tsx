@@ -232,7 +232,7 @@ const Chat = () => {
                   <MessageCircle className="h-5 w-5 text-secondary" />
                   Love Chats
                 </CardTitle>
-                <div className="flex gap-1">
+                <div className="hidden lg:flex gap-1">
                   <Link to="/find-friends">
                     <Button variant="outline" size="sm">
                       <Users className="h-4 w-4" />
