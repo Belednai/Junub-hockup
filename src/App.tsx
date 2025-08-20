@@ -8,7 +8,8 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import LoveGames from "./pages/LoveGames";
 import FindFriends from "./pages/FindFriends";
-import Chat from "./pages/Chat";
+import Chat from './pages/Chat';
+import SocialFeed from './pages/SocialFeed';
 import NotFound from "./pages/NotFound";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AuthProvider } from "@/hooks/useAuth";
@@ -31,6 +32,7 @@ const App = () => (
               <Route path="/find-friends" element={<FindFriends />} />
               <Route path="/chat" element={<Chat />} />
               <Route path="/chat/:userId" element={<Chat />} />
+              <Route path="/social" element={<SocialFeed />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -230,6 +230,12 @@ const Dashboard = () => {
                 Chat
               </Button>
             </Link>
+            <Link to="/social">
+              <Button variant="outline" className="flex items-center gap-2">
+                <Heart className="h-4 w-4" />
+                Social Feed
+              </Button>
+            </Link>
             <Link to="/games">
               <Button variant="outline" className="flex items-center gap-2">
                 <GamepadIcon className="h-4 w-4" />

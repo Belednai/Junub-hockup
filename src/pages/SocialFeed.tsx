@@ -48,21 +48,57 @@ export default function SocialFeed() {
 
   const fetchPosts = async () => {
     try {
-      const { data, error } = await supabase
+      // First get posts with reactions and comments
+      const { data: postsData, error: postsError } = await supabase
         .from('user_posts')
         .select(`
-          *,
-          profiles!user_posts_user_id_fkey (full_name, avatar_url),
+          id,
+          caption,
+          audio_url,
+          audio_duration,
+          created_at,
+          user_id,
           post_reactions (id, reaction_type, user_id),
-          post_comments (
-            id, content, user_id,
-            profiles!post_comments_user_id_fkey (full_name)
-          )
+          post_comments (id, content, user_id, created_at)
         `)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setPosts(data || []);
+      if (postsError) throw postsError;
+
+      // Get all unique user IDs from posts and comments
+      const userIds = new Set<string>();
+      postsData?.forEach(post => {
+        userIds.add(post.user_id);
+        post.post_comments?.forEach(comment => userIds.add(comment.user_id));
+      });
+
+      // Get profiles for all users
+      const { data: profilesData, error: profilesError } = await supabase
+        .from('profiles')
+        .select('user_id, full_name, avatar_url')
+        .in('user_id', Array.from(userIds));
+
+      if (profilesError) throw profilesError;
+
+      // Create a map of user profiles
+      const profilesMap = new Map();
+      profilesData?.forEach(profile => {
+        profilesMap.set(profile.user_id, profile);
+      });
+
+      // Combine posts with profile data
+      const postsWithProfiles = postsData?.map(post => ({
+        ...post,
+        profiles: profilesMap.get(post.user_id),
+        post_comments: post.post_comments?.map(comment => ({
+          ...comment,
+          profiles: profilesMap.get(comment.user_id)
+        })),
+        reactions: post.post_reactions,
+        comments: post.post_comments
+      }));
+
+      setPosts(postsWithProfiles || []);
     } catch (error) {
       console.error('Error fetching posts:', error);
       toast({
