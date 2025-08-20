@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Heart, MessageCircle, Plus, Trash2, GamepadIcon, Home } from 'lucide-react';
+import { Heart, MessageCircle, Plus, Trash2, GamepadIcon, Home, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface UserPost {
@@ -218,6 +218,18 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="flex gap-2">
+            <Link to="/find-friends">
+              <Button variant="outline" className="flex items-center gap-2">
+                <Users className="h-4 w-4" />
+                Find Friends
+              </Button>
+            </Link>
+            <Link to="/chat">
+              <Button variant="outline" className="flex items-center gap-2">
+                <MessageCircle className="h-4 w-4" />
+                Chat
+              </Button>
+            </Link>
             <Link to="/games">
               <Button variant="outline" className="flex items-center gap-2">
                 <GamepadIcon className="h-4 w-4" />
