@@ -297,11 +297,9 @@ const Chat = () => {
               <>
                 <CardHeader className="border-b">
                   <div className="flex items-center gap-3">
-                    <Link to="/chat">
-                      <Button variant="ghost" size="sm">
-                        <ArrowLeft className="h-4 w-4" />
-                      </Button>
-                    </Link>
+                    <Button variant="ghost" size="sm" onClick={() => navigate('/chat')}>
+                      <ArrowLeft className="h-4 w-4" />
+                    </Button>
                     <div className="w-10 h-10 bg-secondary/20 rounded-full flex items-center justify-center">
                       <Heart className="h-5 w-5 text-secondary" />
                     </div>
@@ -357,7 +355,7 @@ const Chat = () => {
                   </div>
 
                   {/* Message Input */}
-                  <div className="border-t pt-4">
+                  <div className="border-t pt-4 pb-20 lg:pb-4">
                     <div className="flex gap-2">
                       <Input
                         placeholder="Send a loving message... 💕"

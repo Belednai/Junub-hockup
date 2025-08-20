@@ -103,7 +103,10 @@ export default function SocialFeed() {
           profiles: profilesMap.get(comment.user_id)
         })),
         reactions: post.post_reactions,
-        comments: post.post_comments
+        comments: post.post_comments?.map(comment => ({
+          ...comment,
+          profiles: profilesMap.get(comment.user_id)
+        }))
       }));
 
       console.log('Posts with profiles:', postsWithProfiles);

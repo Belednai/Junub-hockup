@@ -45,6 +45,7 @@ export const PostCard: React.FC<PostCardProps> = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [shareCaption, setShareCaption] = useState('');
   const [showShareDialog, setShowShareDialog] = useState(false);
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
 
   const isLiked = post.reactions?.some(r => r.user_id === currentUserId && r.reaction_type === 'like');
   const likesCount = post._count?.reactions || post.reactions?.length || 0;
@@ -53,10 +54,47 @@ export const PostCard: React.FC<PostCardProps> = ({
 
   const handlePlay = () => {
     if (post.audio_url) {
-      const audio = new Audio(post.audio_url);
-      audio.play();
-      setIsPlaying(true);
-      audio.onended = () => setIsPlaying(false);
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+      
+      const newAudio = new Audio(post.audio_url);
+      newAudio.crossOrigin = "anonymous";
+      
+      newAudio.onloadstart = () => {
+        console.log('Audio loading started');
+      };
+      
+      newAudio.oncanplay = () => {
+        console.log('Audio can play');
+        newAudio.play().then(() => {
+          setIsPlaying(true);
+        }).catch((error) => {
+          console.error('Error playing audio:', error);
+          setIsPlaying(false);
+        });
+      };
+      
+      newAudio.onended = () => {
+        setIsPlaying(false);
+        setAudio(null);
+      };
+      
+      newAudio.onerror = (error) => {
+        console.error('Audio error:', error);
+        setIsPlaying(false);
+        setAudio(null);
+      };
+      
+      setAudio(newAudio);
+    }
+  };
+
+  const handlePause = () => {
+    if (audio) {
+      audio.pause();
+      setIsPlaying(false);
     }
   };
 
@@ -108,12 +146,11 @@ export const PostCard: React.FC<PostCardProps> = ({
             <Button
               variant="outline"
               size="sm"
-              onClick={handlePlay}
-              disabled={isPlaying}
+              onClick={isPlaying ? handlePause : handlePlay}
               className="flex items-center gap-2"
             >
               {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-              {isPlaying ? 'Playing...' : 'Play Voice Note'}
+              {isPlaying ? 'Pause' : 'Play Voice Note'}
             </Button>
             {post.audio_duration && (
               <span className="text-sm text-muted-foreground">

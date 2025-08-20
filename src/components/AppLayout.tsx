@@ -31,6 +31,11 @@ export function AppLayout({ children }: AppLayoutProps) {
             <span className="font-bold text-lg hidden sm:inline">Junub-hockup App</span>
           </Link>
         </div>
+        
+        {/* Mobile centered title */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 sm:hidden">
+          <span className="font-bold text-lg">Junub-hockup App</span>
+        </div>
 
         {/* Auth Status */}
         <div className="flex items-center gap-2">
