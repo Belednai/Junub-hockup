@@ -55,7 +55,7 @@ const quotes = [
 
 export const ComicQuotes = () => {
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-muted/30 to-secondary/10">
+    <section id="quotes" className="py-20 px-4 bg-gradient-to-b from-muted/30 to-secondary/10">
       <div className="container max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-5xl font-bold gradient-text mb-4">

@@ -45,7 +45,7 @@ export const MoodRefresher = () => {
   };
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-br from-accent/10 via-secondary/10 to-primary/10">
+    <section id="mood" className="py-20 px-4 bg-gradient-to-br from-accent/10 via-secondary/10 to-primary/10">
       <div className="container max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-5xl font-bold gradient-text mb-4">

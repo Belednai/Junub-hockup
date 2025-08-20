@@ -4,7 +4,7 @@ import heroImage from "@/assets/hero-couple.jpg";
 
 export const Hero = () => {
   return (
-    <section className="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-background via-muted/50 to-primary-glow/20">
+    <section id="hero" className="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-background via-muted/50 to-primary-glow/20">
       <div className="container max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="text-center lg:text-left space-y-8">

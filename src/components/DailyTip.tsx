@@ -51,7 +51,7 @@ export const DailyTip = () => {
   const tip = tips[currentTip];
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-background to-muted/30">
+    <section id="daily-tip" className="py-20 px-4 bg-gradient-to-b from-background to-muted/30">
       <div className="container max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-5xl font-bold gradient-text mb-4">
