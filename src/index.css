@@ -8,33 +8,56 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Comic-inspired background system */
+    --background: 220 30% 98%;
+    --foreground: 235 25% 15%;
 
+    /* Card and surface colors */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 235 25% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 235 25% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary comic blue palette */
+    --primary: 220 85% 55%;
+    --primary-glow: 220 90% 70%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary coral pink palette */
+    --secondary: 345 75% 65%;
+    --secondary-glow: 345 80% 75%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted colors for subtle elements */
+    --muted: 220 20% 95%;
+    --muted-foreground: 220 15% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent bright yellow for highlights */
+    --accent: 48 95% 65%;
+    --accent-glow: 48 100% 75%;
+    --accent-foreground: 235 25% 15%;
+
+    /* Speech bubble colors */
+    --bubble: 0 0% 100%;
+    --bubble-border: 220 40% 85%;
+
+    /* Fun gradients */
+    --gradient-comic: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary-glow)), hsl(var(--accent-glow)));
+    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
+
+    /* Comic-style shadows */
+    --shadow-comic: 0 8px 32px -8px hsl(var(--primary) / 0.2);
+    --shadow-bubble: 0 4px 20px -4px hsl(var(--primary) / 0.15);
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.3);
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 220 40% 90%;
+    --input: 220 30% 96%;
+    --ring: 220 85% 55%;
 
     --radius: 0.5rem;
 
@@ -101,5 +124,88 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Comic Neue', 'Fredoka', cursive, system-ui, -apple-system, sans-serif;
   }
+}
+
+@layer components {
+  /* Comic Speech Bubble */
+  .speech-bubble {
+    @apply relative bg-bubble border-2 border-bubble-border rounded-2xl p-4 shadow-bubble;
+  }
+  
+  .speech-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 20px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid hsl(var(--bubble));
+  }
+
+  /* Comic Button Variants */
+  .btn-comic {
+    @apply font-bold uppercase tracking-wide transition-all duration-200 hover:scale-105 active:scale-95;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  }
+
+  .btn-hero {
+    @apply btn-comic bg-gradient-to-r from-primary to-secondary text-primary-foreground shadow-comic hover:shadow-glow;
+  }
+
+  .btn-mood {
+    @apply btn-comic bg-accent text-accent-foreground border-2 border-accent hover:bg-accent-glow;
+  }
+
+  /* Comic Card */
+  .comic-card {
+    @apply bg-card rounded-3xl p-6 shadow-comic hover:shadow-glow transition-all duration-300 hover:-translate-y-1;
+    background: linear-gradient(145deg, hsl(var(--card)), hsl(var(--muted)));
+  }
+
+  /* Fun Animations */
+  .bounce-gentle {
+    animation: bounce-gentle 2s ease-in-out infinite;
+  }
+
+  .wiggle {
+    animation: wiggle 1s ease-in-out infinite;
+  }
+
+  .float {
+    animation: float 3s ease-in-out infinite;
+  }
+}
+
+@layer utilities {
+  .text-comic {
+    @apply font-bold text-lg leading-relaxed;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  }
+
+  .gradient-text {
+    background: var(--gradient-comic);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+@keyframes bounce-gentle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
 }
