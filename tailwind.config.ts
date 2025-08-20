@@ -70,6 +70,11 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				}
 			},
+			boxShadow: {
+				'comic': '0 8px 32px -8px hsl(var(--primary) / 0.2)',
+				'bubble': '0 4px 20px -4px hsl(var(--primary) / 0.15)',
+				'glow': '0 0 40px hsl(var(--primary-glow) / 0.3)'
+			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
