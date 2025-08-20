@@ -3,7 +3,7 @@ import {
   LayoutDashboard, 
   Users, 
   MessageCircle, 
-  Activity, 
+  Rss, 
   Gamepad2,
   Heart,
   Sparkles
@@ -38,7 +38,7 @@ export function AppSidebar() {
     { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
     { title: "Find Friends", url: "/find-friends", icon: Users },
     { title: "Chat", url: "/chat", icon: MessageCircle },
-    { title: "Social Feed", url: "/social", icon: Activity },
+    { title: "Social Feed", url: "/social", icon: Rss },
     { title: "Love Games", url: "/games", icon: Gamepad2 },
   ];
 

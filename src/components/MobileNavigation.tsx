@@ -3,7 +3,7 @@ import {
   LayoutDashboard, 
   Users, 
   MessageCircle, 
-  Activity, 
+  Rss, 
   Gamepad2
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
@@ -17,7 +17,7 @@ export function MobileNavigation() {
     { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
     { title: "Friends", url: "/find-friends", icon: Users },
     { title: "Chat", url: "/chat", icon: MessageCircle },
-    { title: "Social", url: "/social", icon: Activity },
+    { title: "Social", url: "/social", icon: Rss },
     { title: "Games", url: "/games", icon: Gamepad2 },
   ] : [
     { title: "Home", url: "/", icon: Home },
