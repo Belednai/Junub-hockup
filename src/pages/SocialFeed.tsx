@@ -99,15 +99,13 @@ export default function SocialFeed() {
       const postsWithProfiles = postsData?.map(post => ({
         ...post,
         profiles: profilesMap.get(post.user_id),
-        post_comments: post.post_comments?.map(comment => ({
-          ...comment,
-          profiles: profilesMap.get(comment.user_id)
-        })),
         reactions: post.post_reactions,
-        comments: post.post_comments?.map(comment => ({
-          ...comment,
-          profiles: profilesMap.get(comment.user_id)
-        }))
+        comments: post.post_comments
+          ?.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+          ?.map(comment => ({
+            ...comment,
+            profiles: profilesMap.get(comment.user_id)
+          })) || []
       }));
 
       console.log('Posts with profiles:', postsWithProfiles);
