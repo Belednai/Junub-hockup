@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { MessageCircle, Users, Home } from 'lucide-react';
 
+
 interface Post {
   id: string;
   caption: string;
