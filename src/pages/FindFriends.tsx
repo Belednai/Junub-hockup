@@ -225,15 +225,23 @@ const FindFriends = () => {
                 const profile = profiles.find(p => p.user_id === request.user_id);
                 return (
                   <div key={request.id} className="flex items-center justify-between bg-accent/10 p-3 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-secondary/20 rounded-full flex items-center justify-center">
-                        <Heart className="h-5 w-5 text-secondary" />
+                    <Link to={`/profile/${request.user_id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                      <div className="w-10 h-10 bg-secondary/20 rounded-full flex items-center justify-center overflow-hidden">
+                        {profile?.avatar_url ? (
+                          <img
+                            src={profile.avatar_url}
+                            alt={profile.full_name || 'User'}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <Heart className="h-5 w-5 text-secondary" />
+                        )}
                       </div>
                       <div>
-                        <p className="font-medium">{profile?.full_name || 'Love Friend'}</p>
+                        <p className="font-medium hover:underline">{profile?.full_name || 'Love Friend'}</p>
                         <p className="text-sm text-muted-foreground">Wants to be your love friend!</p>
                       </div>
-                    </div>
+                    </Link>
                     <Button
                       onClick={() => acceptFriendRequest(request.id)}
                       className="btn-hero"
@@ -275,15 +283,25 @@ const FindFriends = () => {
                   return (
                     <div key={profile.id} className="bg-muted/30 p-4 rounded-lg space-y-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center">
-                          <Heart className="h-6 w-6 text-secondary" />
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="font-medium">{profile.full_name || 'Love Friend'}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            Joined {new Date(profile.created_at).toLocaleDateString()}
-                          </p>
-                        </div>
+                        <Link to={`/profile/${profile.user_id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                          <div className="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center overflow-hidden">
+                            {profile.avatar_url ? (
+                              <img
+                                src={profile.avatar_url}
+                                alt={profile.full_name || 'User'}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <Heart className="h-6 w-6 text-secondary" />
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-medium hover:underline">{profile.full_name || 'Love Friend'}</h3>
+                            <p className="text-sm text-muted-foreground">
+                              Joined {new Date(profile.created_at).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </Link>
                       </div>
 
                       <div className="flex gap-2">

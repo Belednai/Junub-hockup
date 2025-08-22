@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Heart, MessageCircle, Share, Play, Pause } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Comment } from './Comment';
+import { Link } from 'react-router-dom';
 
 interface CommentReply {
   id: string;
@@ -144,20 +145,22 @@ export const PostCard: React.FC<PostCardProps> = ({
     <Card className="w-full">
       <CardHeader className="pb-3">
         <div className="flex items-center gap-3">
-          <Avatar className="h-10 w-10">
-            <AvatarImage src={post.profiles?.avatar_url} />
-            <AvatarFallback>
-              {post.profiles?.full_name?.charAt(0).toUpperCase() || 'U'}
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="font-semibold text-sm">
-              {post.profiles?.full_name || `User ${post.user_id.slice(0, 8)}`}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
-            </p>
-          </div>
+          <Link to={`/profile/${post.user_id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <Avatar className="h-10 w-10">
+              <AvatarImage src={post.profiles?.avatar_url} />
+              <AvatarFallback>
+                {post.profiles?.full_name?.charAt(0).toUpperCase() || 'U'}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="font-semibold text-sm hover:underline">
+                {post.profiles?.full_name || `User ${post.user_id.slice(0, 8)}`}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
+              </p>
+            </div>
+          </Link>
         </div>
       </CardHeader>
       
