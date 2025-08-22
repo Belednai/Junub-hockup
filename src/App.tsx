@@ -6,7 +6,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
-import Dashboard from "./pages/Dashboard";
 import LoveGames from "./pages/LoveGames";
 import FindFriends from "./pages/FindFriends";
 import Profile from "./pages/Profile";
@@ -28,6 +27,7 @@ const ProtectedIndex = () => {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
   
+  // Redirect authenticated users to social feed
   if (user) {
     return <Navigate to="/social" replace />;
   }
@@ -47,10 +47,10 @@ const App = () => (
               <Routes>
                 <Route path="/" element={<ProtectedIndex />} />
                 <Route path="/auth" element={<Auth />} />
-                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/games" element={<LoveGames />} />
                 <Route path="/find-friends" element={<FindFriends />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/profile/:userId" element={<Profile />} />
                 <Route path="/chat" element={<Chat />} />
                 <Route path="/chat/:userId" element={<Chat />} />
                 <Route path="/social" element={<SocialFeed />} />

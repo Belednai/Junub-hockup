@@ -31,4 +31,6 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     host: "::",
   },
+  // Add fallback for client-side routing
+  appType: 'spa',
 }));

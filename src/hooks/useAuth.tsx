@@ -63,7 +63,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      setLoading(true);
+      
+      // Clear local state immediately
+      setUser(null);
+      setSession(null);
+      
+      // Sign out from Supabase
+      await supabase.auth.signOut();
+      
+      // Clear any logout flags
+      sessionStorage.removeItem('logging_out');
+      
+      setLoading(false);
+      
+      // Use React Router navigation instead of window.location
+      window.location.replace('/');
+    } catch (error) {
+      console.error('Error during signout:', error);
+      // Clear state even if there's an error
+      setUser(null);
+      setSession(null);
+      sessionStorage.removeItem('logging_out');
+      setLoading(false);
+      // Still redirect to home
+      window.location.replace('/');
+    }
   };
 
   const value = {
