@@ -3,16 +3,16 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Smartphone, Download, ExternalLink } from 'lucide-react';
 
-// App store URLs - Update these with your actual store/test links
+// App store URLs - Currently showing coming soon message
 const APP_STORE_URLS = {
-  // iOS TestFlight or App Store URL
-  IOS: 'https://testflight.apple.com/join/your-testflight-link', // Replace with your TestFlight link
+  // iOS TestFlight or App Store URL - Will be updated once app is built
+  IOS: null, // 'https://testflight.apple.com/join/your-testflight-link',
   
-  // Android Play Store or Firebase App Distribution URL
-  ANDROID: 'https://play.google.com/store/apps/details?id=com.junubhockup.app', // Replace with your Play Store link
+  // Android Play Store or Firebase App Distribution URL - Will be updated once app is built
+  ANDROID: null, // 'https://play.google.com/store/apps/details?id=com.junubhockup.app',
   
   // Alternative: Firebase App Distribution for Android testing
-  ANDROID_TEST: 'https://appdistribution.firebase.dev/i/your-firebase-link', // Replace with Firebase App Distribution link
+  ANDROID_TEST: null, // 'https://appdistribution.firebase.dev/i/your-firebase-link',
 };
 
 const GetApp: React.FC = () => {
@@ -21,7 +21,12 @@ const GetApp: React.FC = () => {
   
   const handleDownload = (platform: 'ios' | 'android') => {
     const url = platform === 'ios' ? APP_STORE_URLS.IOS : APP_STORE_URLS.ANDROID;
-    window.open(url, '_blank');
+    if (url) {
+      window.open(url, '_blank');
+    } else {
+      // Show coming soon message
+      alert(`${platform === 'ios' ? 'iOS' : 'Android'} app is coming soon! 🚀\n\nWe're currently building the mobile app. In the meantime, you can use Junub-hockup directly in your browser!`);
+    }
   };
 
   return (
