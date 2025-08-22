@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { PostCard } from '@/components/PostCard';
 import { VoiceRecorder } from '@/components/VoiceRecorder';
+import { ImageUpload } from '@/components/ImageUpload';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,11 +12,30 @@ import { useToast } from '@/components/ui/use-toast';
 import { MessageCircle, Users, Home } from 'lucide-react';
 
 
+interface CommentReply {
+  id: string;
+  content: string;
+  user_id: string;
+  created_at: string;
+  profiles?: { full_name?: string };
+}
+
+interface CommentData {
+  id: string;
+  content: string;
+  user_id: string;
+  created_at: string;
+  profiles?: { full_name?: string };
+  comment_reactions?: { id: string; reaction_type: string; user_id: string }[];
+  comment_replies?: CommentReply[];
+}
+
 interface Post {
   id: string;
   caption: string;
   audio_url?: string;
   audio_duration?: number;
+  images?: string[];
   created_at: string;
   user_id: string;
   profiles?: {
@@ -23,7 +43,7 @@ interface Post {
     avatar_url?: string;
   };
   reactions?: { id: string; reaction_type: string; user_id: string }[];
-  comments?: { id: string; content: string; user_id: string; profiles?: { full_name?: string } }[];
+  comments?: CommentData[];
 }
 
 export default function SocialFeed() {
@@ -34,6 +54,7 @@ export default function SocialFeed() {
   const [newPostCaption, setNewPostCaption] = useState('');
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [audioDuration, setAudioDuration] = useState(0);
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
   const [isCreatingPost, setIsCreatingPost] = useState(false);
 
@@ -124,13 +145,14 @@ export default function SocialFeed() {
   };
 
   const createPost = async () => {
-    if (!user || (!newPostCaption.trim() && !audioBlob)) {
+    if (!user || (!newPostCaption.trim() && !audioBlob && selectedImages.length === 0)) {
       return;
     }
 
     setIsCreatingPost(true);
     try {
       let audioUrl = null;
+      const imageUrls: string[] = [];
 
       // Upload audio if exists
       if (audioBlob) {
@@ -148,16 +170,41 @@ export default function SocialFeed() {
         audioUrl = publicUrl;
       }
 
-      const { error } = await supabase
+      // Upload images if exist
+      if (selectedImages.length > 0) {
+        for (let i = 0; i < selectedImages.length; i++) {
+          const image = selectedImages[i];
+          const fileName = `${user.id}/post-${Date.now()}-${i}.${image.name.split('.').pop()}`;
+          
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('post-images')
+            .upload(fileName, image);
+
+          if (uploadError) throw uploadError;
+          
+          const { data: { publicUrl } } = supabase.storage
+            .from('post-images')
+            .getPublicUrl(uploadData.path);
+          
+          imageUrls.push(publicUrl);
+        }
+      }
+
+      // Create the post
+      const { data: postData, error: postError } = await supabase
         .from('user_posts')
         .insert({
-          caption: newPostCaption || 'Voice note',
+          caption: newPostCaption || (audioBlob ? 'Voice note' : (selectedImages.length > 0 ? 'Shared images' : 'New post')),
           user_id: user.id,
           audio_url: audioUrl,
           audio_duration: audioDuration > 0 ? audioDuration : null
-        });
+        })
+        .select()
+        .single();
 
-      if (error) throw error;
+      if (postError) throw postError;
+
+      // Note: Individual image records will be available after running the migration
 
       toast({
         title: "Success",
@@ -167,6 +214,7 @@ export default function SocialFeed() {
       setNewPostCaption('');
       setAudioBlob(null);
       setAudioDuration(0);
+      setSelectedImages([]);
       fetchPosts();
     } catch (error) {
       console.error('Error creating post:', error);
@@ -250,6 +298,36 @@ export default function SocialFeed() {
     }
   };
 
+  const handleCommentLike = async (commentId: string) => {
+    if (!user) return;
+
+    try {
+      // For now, we'll implement this as a placeholder since the tables don't exist yet
+      console.log('Comment like functionality will be available after migration');
+      toast({
+        title: "Info",
+        description: "Comment reactions will be available soon!",
+      });
+    } catch (error) {
+      console.error('Error handling comment like:', error);
+    }
+  };
+
+  const handleCommentReply = async (commentId: string, content: string) => {
+    if (!user) return;
+
+    try {
+      // For now, we'll implement this as a placeholder since the tables don't exist yet
+      console.log('Comment reply functionality will be available after migration');
+      toast({
+        title: "Info",
+        description: "Comment replies will be available soon!",
+      });
+    } catch (error) {
+      console.error('Error creating comment reply:', error);
+    }
+  };
+
   const handleRecordingComplete = (blob: Blob, duration: number) => {
     setAudioBlob(blob);
     setAudioDuration(duration);
@@ -298,6 +376,13 @@ export default function SocialFeed() {
               className="min-h-[80px]"
             />
             
+            <ImageUpload
+              images={selectedImages}
+              onImagesChange={setSelectedImages}
+              maxImages={3}
+              disabled={isCreatingPost}
+            />
+            
             <div className="flex items-center justify-between">
               <VoiceRecorder
                 onRecordingComplete={handleRecordingComplete}
@@ -306,7 +391,7 @@ export default function SocialFeed() {
               
               <Button
                 onClick={createPost}
-                disabled={isCreatingPost || (!newPostCaption.trim() && !audioBlob)}
+                disabled={isCreatingPost || (!newPostCaption.trim() && !audioBlob && selectedImages.length === 0)}
               >
                 {isCreatingPost ? 'Posting...' : 'Post'}
               </Button>
@@ -331,6 +416,8 @@ export default function SocialFeed() {
                 onLike={handleLike}
                 onComment={handleComment}
                 onShare={handleShare}
+                onCommentLike={handleCommentLike}
+                onCommentReply={handleCommentReply}
               />
             ))
           )}

@@ -4,6 +4,25 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Heart, MessageCircle, Share, Play, Pause } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { Comment } from './Comment';
+
+interface CommentReply {
+  id: string;
+  content: string;
+  user_id: string;
+  created_at: string;
+  profiles?: { full_name?: string };
+}
+
+interface CommentData {
+  id: string;
+  content: string;
+  user_id: string;
+  created_at: string;
+  profiles?: { full_name?: string };
+  comment_reactions?: { id: string; reaction_type: string; user_id: string }[];
+  comment_replies?: CommentReply[];
+}
 
 interface Post {
   id: string;
@@ -17,7 +36,7 @@ interface Post {
     avatar_url?: string;
   };
   reactions?: { id: string; reaction_type: string; user_id: string }[];
-  comments?: { id: string; content: string; user_id: string; profiles?: { full_name?: string } }[];
+  comments?: CommentData[];
   _count?: {
     reactions: number;
     comments: number;
@@ -31,6 +50,8 @@ interface PostCardProps {
   onLike: (postId: string) => void;
   onComment: (postId: string, content: string) => void;
   onShare: (postId: string, caption?: string) => void;
+  onCommentLike?: (commentId: string) => void;
+  onCommentReply?: (commentId: string, content: string) => void;
 }
 
 export const PostCard: React.FC<PostCardProps> = ({ 
@@ -38,7 +59,9 @@ export const PostCard: React.FC<PostCardProps> = ({
   currentUserId, 
   onLike, 
   onComment, 
-  onShare 
+  onShare,
+  onCommentLike,
+  onCommentReply
 }) => {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
@@ -211,12 +234,19 @@ export const PostCard: React.FC<PostCardProps> = ({
             </div>
             
             {post.comments?.map((comment) => (
-              <div key={comment.id} className="flex gap-2 text-sm">
-                <span className="font-semibold">
-                  {comment.profiles?.full_name || `User ${comment.user_id.slice(0, 8)}`}:
-                </span>
-                <span>{comment.content}</span>
-              </div>
+              <Comment
+                key={comment.id}
+                id={comment.id}
+                content={comment.content}
+                user_id={comment.user_id}
+                created_at={comment.created_at}
+                profiles={comment.profiles}
+                comment_reactions={comment.comment_reactions}
+                comment_replies={comment.comment_replies}
+                currentUserId={currentUserId}
+                onLike={onCommentLike || (() => {})}
+                onReply={onCommentReply || (() => {})}
+              />
             ))}
           </div>
         )}

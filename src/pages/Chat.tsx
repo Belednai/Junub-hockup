@@ -44,6 +44,7 @@ const Chat = () => {
   const [newMessage, setNewMessage] = useState('');
   const [selectedUser, setSelectedUser] = useState<Profile | null>(null);
   const [loadingMessages, setLoadingMessages] = useState(false);
+  const [totalUnreadCount, setTotalUnreadCount] = useState(0);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
