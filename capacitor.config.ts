@@ -5,8 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Junub-hockup',
   webDir: 'dist',
   server: {
-    url: 'https://66db1e01-ac02-46ee-b9fc-0256c95deab3.lovableproject.com?forceHideBadge=true',
-    cleartext: true
+    androidScheme: 'https'
   },
   plugins: {
     SplashScreen: {

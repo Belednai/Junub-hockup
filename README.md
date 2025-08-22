@@ -59,8 +59,9 @@ npm run dev
 To build the mobile app for Android and iOS:
 
 ```bash
-# Install Capacitor dependencies
-npm install @capacitor/push-notifications @capacitor/local-notifications @capacitor/app @capacitor/status-bar @capacitor/splash-screen
+# First, remove existing node_modules and reinstall with compatible versions
+rm -rf node_modules package-lock.json
+npm install
 
 # Build the web app
 npm run build
