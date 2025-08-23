@@ -46,7 +46,7 @@ const Chat = () => {
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [totalUnreadCount, setTotalUnreadCount] = useState(0);
   
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesTopRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -65,11 +65,11 @@ const Chat = () => {
   }, [user, userId]);
 
   useEffect(() => {
-    scrollToBottom();
+    scrollToTop();
   }, [messages]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToTop = () => {
+    messagesTopRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const fetchConversations = async () => {
@@ -154,7 +154,7 @@ const Chat = () => {
         .from('direct_messages')
         .select('*')
         .or(`and(sender_id.eq.${user?.id},receiver_id.eq.${targetUserId}),and(sender_id.eq.${targetUserId},receiver_id.eq.${user?.id})`)
-        .order('created_at', { ascending: true });
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       setMessages(data || []);
@@ -352,7 +352,7 @@ const Chat = () => {
                         </div>
                       ))
                     )}
-                    <div ref={messagesEndRef} />
+                    <div ref={messagesTopRef} />
                   </div>
 
                   {/* Message Input */}

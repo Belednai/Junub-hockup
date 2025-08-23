@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { PostCard } from '@/components/PostCard';
 import { VoiceRecorder } from '@/components/VoiceRecorder';
-import { ImageUpload } from '@/components/ImageUpload';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -54,7 +53,6 @@ export default function SocialFeed() {
   const [newPostCaption, setNewPostCaption] = useState('');
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [audioDuration, setAudioDuration] = useState(0);
-  const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
   const [isCreatingPost, setIsCreatingPost] = useState(false);
 
@@ -145,14 +143,13 @@ export default function SocialFeed() {
   };
 
   const createPost = async () => {
-    if (!user || (!newPostCaption.trim() && !audioBlob && selectedImages.length === 0)) {
+    if (!user || (!newPostCaption.trim() && !audioBlob)) {
       return;
     }
 
     setIsCreatingPost(true);
     try {
       let audioUrl = null;
-      const imageUrls: string[] = [];
 
       // Upload audio if exists
       if (audioBlob) {
@@ -170,31 +167,11 @@ export default function SocialFeed() {
         audioUrl = publicUrl;
       }
 
-      // Upload images if exist
-      if (selectedImages.length > 0) {
-        for (let i = 0; i < selectedImages.length; i++) {
-          const image = selectedImages[i];
-          const fileName = `${user.id}/post-${Date.now()}-${i}.${image.name.split('.').pop()}`;
-          
-          const { data: uploadData, error: uploadError } = await supabase.storage
-            .from('post-images')
-            .upload(fileName, image);
-
-          if (uploadError) throw uploadError;
-          
-          const { data: { publicUrl } } = supabase.storage
-            .from('post-images')
-            .getPublicUrl(uploadData.path);
-          
-          imageUrls.push(publicUrl);
-        }
-      }
-
       // Create the post
       const { data: postData, error: postError } = await supabase
         .from('user_posts')
         .insert({
-          caption: newPostCaption || (audioBlob ? 'Voice note' : (selectedImages.length > 0 ? 'Shared images' : 'New post')),
+          caption: newPostCaption || (audioBlob ? 'Voice note' : 'New post'),
           user_id: user.id,
           audio_url: audioUrl,
           audio_duration: audioDuration > 0 ? audioDuration : null
@@ -204,8 +181,6 @@ export default function SocialFeed() {
 
       if (postError) throw postError;
 
-      // Note: Individual image records will be available after running the migration
-
       toast({
         title: "Success",
         description: "Post created successfully!",
@@ -214,7 +189,6 @@ export default function SocialFeed() {
       setNewPostCaption('');
       setAudioBlob(null);
       setAudioDuration(0);
-      setSelectedImages([]);
       fetchPosts();
     } catch (error) {
       console.error('Error creating post:', error);
@@ -376,13 +350,6 @@ export default function SocialFeed() {
               className="min-h-[80px]"
             />
             
-            <ImageUpload
-              images={selectedImages}
-              onImagesChange={setSelectedImages}
-              maxImages={3}
-              disabled={isCreatingPost}
-            />
-            
             <div className="flex items-center justify-between">
               <VoiceRecorder
                 onRecordingComplete={handleRecordingComplete}
@@ -391,7 +358,7 @@ export default function SocialFeed() {
               
               <Button
                 onClick={createPost}
-                disabled={isCreatingPost || (!newPostCaption.trim() && !audioBlob && selectedImages.length === 0)}
+                disabled={isCreatingPost || (!newPostCaption.trim() && !audioBlob)}
               >
                 {isCreatingPost ? 'Posting...' : 'Post'}
               </Button>

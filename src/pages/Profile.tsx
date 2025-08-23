@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { PostCard } from '@/components/PostCard';
+import { ImageUpload } from '@/components/ImageUpload';
 import { User, Upload, Camera, ArrowLeft, Heart, MessageCircle, Plus, Trash2, Users, GamepadIcon, Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -18,6 +19,7 @@ interface Profile {
   user_id: string;
   full_name: string;
   avatar_url?: string;
+  profile_images?: string[];
   created_at: string;
   updated_at: string;
 }
@@ -55,6 +57,11 @@ const Profile = () => {
   const [newMessage, setNewMessage] = useState('');
   const [loadingPosts, setLoadingPosts] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(true);
+
+  // Profile images state
+  const [profileImages, setProfileImages] = useState<File[]>([]);
+  const [existingProfileImages, setExistingProfileImages] = useState<string[]>([]);
+  const [uploadingProfileImages, setUploadingProfileImages] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -95,6 +102,7 @@ const Profile = () => {
       } else {
         setProfile(data);
         setFullName(data.full_name || '');
+        setExistingProfileImages(data.profile_images || []);
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -437,6 +445,106 @@ const Profile = () => {
     }
   };
 
+  const uploadProfileImages = async (files: File[]): Promise<string[]> => {
+    if (!user || !profile) return [];
+
+    try {
+      setUploadingProfileImages(true);
+      const uploadedUrls: string[] = [];
+
+      for (const file of files) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `profile_${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `${user.id}/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('profile-images')
+          .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        // Get public URL
+        const { data } = supabase.storage
+          .from('profile-images')
+          .getPublicUrl(filePath);
+
+        uploadedUrls.push(data.publicUrl);
+      }
+
+      return uploadedUrls;
+    } catch (error) {
+      console.error('Error uploading profile images:', error);
+      toast({
+        title: "Error",
+        description: "Failed to upload profile images",
+        variant: "destructive"
+      });
+      return [];
+    } finally {
+      setUploadingProfileImages(false);
+    }
+  };
+
+  const updateProfileWithImages = async () => {
+    if (!user || !profile) return;
+
+    try {
+      setUpdating(true);
+      
+      let avatarUrl = profile.avatar_url;
+      let profileImagesUrls = existingProfileImages;
+      
+      // Upload new avatar if selected
+      if (avatarFile) {
+        const newAvatarUrl = await uploadAvatar(avatarFile);
+        if (newAvatarUrl) {
+          avatarUrl = newAvatarUrl;
+        }
+      }
+
+      // Upload new profile images if any
+      if (profileImages.length > 0) {
+        const newImageUrls = await uploadProfileImages(profileImages);
+        if (newImageUrls.length > 0) {
+          profileImagesUrls = [...existingProfileImages, ...newImageUrls].slice(0, 3); // Limit to 3 images
+        }
+      }
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .update({
+          full_name: fullName,
+          avatar_url: avatarUrl,
+          profile_images: profileImagesUrls,
+          updated_at: new Date().toISOString()
+        })
+        .eq('user_id', user.id)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setProfile(data);
+      setAvatarFile(null);
+      setProfileImages([]);
+      setExistingProfileImages(profileImagesUrls);
+      
+      toast({
+        title: "Profile updated! ✨",
+        description: "Your love profile looks amazing!"
+      });
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update profile",
+        variant: "destructive"
+      });
+    } finally {
+      setUpdating(false);
+    }
+  };
+
   if (loading || loadingProfile) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -574,10 +682,46 @@ const Profile = () => {
                 </div>
               </div>
 
+              {/* Profile Images Section */}
+              <div className="space-y-4">
+                <div>
+                  <Label className="text-base font-semibold">Profile Images</Label>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Add up to 3 images so others can recognize you when viewing your profile
+                  </p>
+                  <ImageUpload
+                    images={profileImages}
+                    onImagesChange={setProfileImages}
+                    maxImages={3 - existingProfileImages.length}
+                    disabled={updating || uploadingProfileImages}
+                  />
+                </div>
+
+                {/* Show existing profile images */}
+                {existingProfileImages.length > 0 && (
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">Current Profile Images</Label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {existingProfileImages.map((imageUrl, index) => (
+                        <div key={index} className="relative group">
+                          <div className="aspect-square rounded-lg overflow-hidden bg-muted">
+                            <img
+                              src={imageUrl}
+                              alt={`Profile image ${index + 1}`}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* Update Button */}
               <Button
-                onClick={updateProfile}
-                disabled={updating || uploading}
+                onClick={updateProfileWithImages}
+                disabled={updating || uploading || uploadingProfileImages}
                 className="btn-hero w-full"
               >
                 {updating ? (
@@ -589,6 +733,11 @@ const Profile = () => {
                   <>
                     <Upload className="h-4 w-4 mr-2 animate-spin" />
                     Uploading Avatar...
+                  </>
+                ) : uploadingProfileImages ? (
+                  <>
+                    <Upload className="h-4 w-4 mr-2 animate-spin" />
+                    Uploading Images...
                   </>
                 ) : (
                   <>
@@ -616,6 +765,25 @@ const Profile = () => {
                   <h2 className="text-2xl font-bold">{profile.full_name || 'User'}</h2>
                   <p className="text-muted-foreground">Member since {new Date(profile.created_at).toLocaleDateString()}</p>
                 </div>
+
+                {/* Profile Images for Recognition */}
+                {profile.profile_images && profile.profile_images.length > 0 && (
+                  <div className="w-full max-w-md">
+                    <h3 className="text-sm font-medium text-center mb-3">Profile Images</h3>
+                    <div className="grid grid-cols-3 gap-2">
+                      {profile.profile_images.map((imageUrl, index) => (
+                        <div key={index} className="aspect-square rounded-lg overflow-hidden bg-muted">
+                          <img
+                            src={imageUrl}
+                            alt={`${profile.full_name || 'User'} - Image ${index + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex gap-2">
                   <Link to={`/chat/${profile.user_id}`}>
                     <Button className="btn-hero">
