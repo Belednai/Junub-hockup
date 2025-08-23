@@ -316,12 +316,12 @@ export default function SocialFeed() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 overflow-x-hidden">
-      <div className="container mx-auto px-4 py-8 max-w-2xl min-w-0">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 overflow-x-hidden w-full">
+      <div className="w-full max-w-2xl mx-auto px-3 sm:px-4 py-6 sm:py-8 min-w-0">
         {/* Navigation */}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-heart">Social Feed</h1>
-          <div className="hidden lg:flex gap-2">
+        <div className="flex justify-between items-center mb-6 sm:mb-8 min-w-0">
+          <h1 className="text-2xl sm:text-3xl font-bold text-heart truncate flex-shrink-0">Social Feed</h1>
+          <div className="hidden lg:flex gap-2 flex-shrink-0">
             <Button variant="outline" onClick={() => navigate('/chat')}>
               <MessageCircle className="h-4 w-4 mr-2" />
               Chat

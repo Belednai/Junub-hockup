@@ -54,21 +54,21 @@ export function AppLayout({ children }: AppLayoutProps) {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Global Header */}
-      <header className="h-14 flex items-center justify-between border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 px-4 min-w-0">
+      <header className="h-14 flex items-center justify-between border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 px-2 sm:px-4 w-full max-w-full overflow-hidden">
         <div className="flex items-center gap-2 min-w-0 flex-shrink-0">
           <Link to="/" className="flex items-center gap-2 min-w-0">
             <Heart className="h-6 w-6 text-primary flex-shrink-0" />
-            <span className="font-bold text-lg hidden sm:inline truncate">Junub-hockup App</span>
+            <span className="font-bold text-base sm:text-lg hidden sm:inline truncate">Junub-hockup App</span>
           </Link>
         </div>
         
         {/* Mobile centered title */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 sm:hidden max-w-[200px]">
-          <span className="font-bold text-lg truncate">Junub-hockup App</span>
+        <div className="absolute left-1/2 transform -translate-x-1/2 sm:hidden max-w-[140px] px-2">
+          <span className="font-bold text-sm truncate block text-center">Junub-hockup</span>
         </div>
 
         {/* Auth Status */}
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0 min-w-0">
           {!loading && (
             user ? (
               <div className="flex items-center gap-2">

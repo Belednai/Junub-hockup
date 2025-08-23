@@ -143,6 +143,40 @@ All colors MUST be HSL.
     padding-left: 1rem;
     padding-right: 1rem;
   }
+
+  /* Enhanced mobile text handling */
+  .break-word {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+  }
+
+  /* Ensure inputs and textareas don't overflow */
+  input, textarea, select {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Mobile-specific card adjustments */
+  @media (max-width: 640px) {
+    .card {
+      margin-left: 0;
+      margin-right: 0;
+    }
+    
+    /* Ensure buttons don't cause overflow */
+    .btn-group {
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    /* Better mobile spacing */
+    .mobile-spacing {
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+  }
 }
 
 @layer components {

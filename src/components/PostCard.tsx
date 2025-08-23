@@ -143,20 +143,20 @@ export const PostCard: React.FC<PostCardProps> = ({
 
   return (
     <Card className="w-full max-w-full overflow-hidden">
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-3 px-3 sm:px-6">
         <div className="flex items-center gap-3 min-w-0">
-          <Link to={`/profile/${post.user_id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <Avatar className="h-10 w-10">
+          <Link to={`/profile/${post.user_id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity min-w-0 flex-1">
+            <Avatar className="h-10 w-10 flex-shrink-0">
               <AvatarImage src={post.profiles?.avatar_url} />
               <AvatarFallback>
                 {post.profiles?.full_name?.charAt(0).toUpperCase() || 'U'}
               </AvatarFallback>
             </Avatar>
-            <div>
-              <p className="font-semibold text-sm hover:underline">
+            <div className="min-w-0 flex-1">
+              <p className="font-semibold text-sm hover:underline truncate">
                 {post.profiles?.full_name || `User ${post.user_id.slice(0, 8)}`}
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-muted-foreground truncate">
                 {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
               </p>
             </div>
@@ -164,8 +164,8 @@ export const PostCard: React.FC<PostCardProps> = ({
         </div>
       </CardHeader>
       
-      <CardContent className="space-y-4">
-        <p className="text-sm break-words whitespace-pre-wrap overflow-wrap-anywhere">{post.caption}</p>
+      <CardContent className="space-y-4 px-3 sm:px-6">
+        <p className="text-sm break-words whitespace-pre-wrap word-wrap break-word hyphens-auto">{post.caption}</p>
         
         {post.audio_url && (
           <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
