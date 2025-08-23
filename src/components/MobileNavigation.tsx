@@ -107,8 +107,8 @@ export function MobileNavigation() {
 
   return (
     <>
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t z-50">
-        <div className="flex items-center justify-around py-2 px-1 max-w-full overflow-hidden">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t z-50 min-w-0">
+        <div className="flex items-center justify-around py-2 px-2 max-w-full overflow-hidden min-w-0">
           {items.slice(0, 4).map((item) => (
             <NavLink
               key={item.title}

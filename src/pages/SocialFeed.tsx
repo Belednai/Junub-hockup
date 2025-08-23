@@ -316,8 +316,8 @@ export default function SocialFeed() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50">
-      <div className="container mx-auto px-4 py-8 max-w-2xl">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 overflow-x-hidden">
+      <div className="container mx-auto px-4 py-8 max-w-2xl min-w-0">
         {/* Navigation */}
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-heart">Social Feed</h1>

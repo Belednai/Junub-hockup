@@ -142,9 +142,9 @@ export const PostCard: React.FC<PostCardProps> = ({
   };
 
   return (
-    <Card className="w-full">
+    <Card className="w-full max-w-full overflow-hidden">
       <CardHeader className="pb-3">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           <Link to={`/profile/${post.user_id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <Avatar className="h-10 w-10">
               <AvatarImage src={post.profiles?.avatar_url} />
