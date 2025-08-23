@@ -165,7 +165,7 @@ export const PostCard: React.FC<PostCardProps> = ({
       </CardHeader>
       
       <CardContent className="space-y-4">
-        <p className="text-sm">{post.caption}</p>
+        <p className="text-sm break-words whitespace-pre-wrap overflow-wrap-anywhere">{post.caption}</p>
         
         {post.audio_url && (
           <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
