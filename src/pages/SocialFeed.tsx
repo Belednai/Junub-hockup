@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { MessageCircle, Users, Home } from 'lucide-react';
+import { Stories } from '@/components/Stories';
 
 
 interface CommentReply {
@@ -336,6 +337,9 @@ export default function SocialFeed() {
             </Button>
           </div>
         </div>
+
+        {/* Stories Section */}
+        <Stories />
 
         {/* Create Post */}
         <Card className="mb-8">

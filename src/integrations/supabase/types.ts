@@ -819,6 +819,97 @@ export type Database = {
         }
         Relationships: []
       }
+      user_stories: {
+        Row: {
+          id: string
+          user_id: string
+          image_url: string
+          caption: string | null
+          created_at: string
+          expires_at: string
+          is_active: boolean
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          image_url: string
+          caption?: string | null
+          created_at?: string
+          expires_at?: string
+          is_active?: boolean
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          image_url?: string
+          caption?: string | null
+          created_at?: string
+          expires_at?: string
+          is_active?: boolean
+        }
+        Relationships: []
+      }
+      story_views: {
+        Row: {
+          id: string
+          story_id: string
+          viewer_id: string
+          viewed_at: string
+        }
+        Insert: {
+          id?: string
+          story_id: string
+          viewer_id: string
+          viewed_at?: string
+        }
+        Update: {
+          id?: string
+          story_id?: string
+          viewer_id?: string
+          viewed_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "story_views_story_id_fkey"
+            columns: ["story_id"]
+            isOneToOne: false
+            referencedRelation: "user_stories"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      story_reactions: {
+        Row: {
+          id: string
+          story_id: string
+          user_id: string
+          reaction_type: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          story_id: string
+          user_id: string
+          reaction_type?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          story_id?: string
+          user_id?: string
+          reaction_type?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "story_reactions_story_id_fkey"
+            columns: ["story_id"]
+            isOneToOne: false
+            referencedRelation: "user_stories"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never

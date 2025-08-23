@@ -12,7 +12,10 @@
     "cap:build": "npm run build && npx cap sync",
     "cap:android": "npm run cap:build && npx cap open android",
     "cap:ios": "npm run cap:build && npx cap open ios",
-    "cap:sync": "npx cap sync"
+    "cap:sync": "npx cap sync",
+    "stories:enable": "node scripts/enable-stories.js",
+    "stories:link": "cd supabase && npx supabase link --project-ref btsnjqeqyhcybiaiutop",
+    "stories:setup": "npm run stories:link && cd supabase && npx supabase db push && cd .. && npm run stories:enable"
   },
   "dependencies": {
     "@capacitor/android": "^6.1.2",
