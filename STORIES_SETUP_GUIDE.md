@@ -10,46 +10,24 @@ This guide will help you fully activate the WhatsApp-style Stories feature in th
 
 ## Step 1: Apply Database Migration
 
-### Option A: Using NPM Scripts (Easiest)
+### Option A: Using NPM Scripts (Recommended)
 
 **First, authenticate with Supabase:**
 ```bash
 npx supabase login
 ```
 
-**Then run the complete setup:**
+**Then run the setup (handles migration conflicts):**
 ```bash
 npm run stories:setup
 ```
 
-This will automatically:
-- Link your Supabase project
-- Apply the database migration
-- Enable full Stories functionality
+This will:
+- Sync your local migrations with remote database
+- Display the Stories migration SQL for manual execution
+- Provide clear next steps
 
-### Option B: Using Supabase CLI (Manual)
-
-1. **Authenticate with Supabase CLI:**
-   ```bash
-   npx supabase login
-   ```
-
-2. **Link your project:**
-   ```bash
-   npm run stories:link
-   ```
-
-3. **Apply the migration:**
-   ```bash
-   cd supabase && npx supabase db push
-   ```
-
-4. **Enable functionality:**
-   ```bash
-   npm run stories:enable
-   ```
-
-### Option B: Manual SQL Execution
+### Option B: Manual SQL Execution (If automated setup fails)
 
 1. Go to your Supabase dashboard: https://supabase.com/dashboard/project/btsnjqeqyhcybiaiutop
 2. Navigate to SQL Editor
