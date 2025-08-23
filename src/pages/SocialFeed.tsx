@@ -350,15 +350,18 @@ export default function SocialFeed() {
               className="min-h-[80px]"
             />
             
-            <div className="flex items-center justify-between">
-              <VoiceRecorder
-                onRecordingComplete={handleRecordingComplete}
-                disabled={isCreatingPost}
-              />
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:justify-between">
+              <div className="flex-shrink-0">
+                <VoiceRecorder
+                  onRecordingComplete={handleRecordingComplete}
+                  disabled={isCreatingPost}
+                />
+              </div>
               
               <Button
                 onClick={createPost}
                 disabled={isCreatingPost || (!newPostCaption.trim() && !audioBlob)}
+                className="w-full sm:w-auto"
               >
                 {isCreatingPost ? 'Posting...' : 'Post'}
               </Button>

@@ -46,7 +46,7 @@ const Chat = () => {
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [totalUnreadCount, setTotalUnreadCount] = useState(0);
   
-  const messagesTopRef = useRef<HTMLDivElement>(null);
+  const messagesBottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -65,11 +65,11 @@ const Chat = () => {
   }, [user, userId]);
 
   useEffect(() => {
-    scrollToTop();
+    scrollToBottom();
   }, [messages]);
 
-  const scrollToTop = () => {
-    messagesTopRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToBottom = () => {
+    messagesBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const fetchConversations = async () => {
@@ -125,6 +125,14 @@ const Chat = () => {
           };
         }) || [];
 
+        // Sort conversations by last message time (oldest first)
+        convos.sort((a, b) => {
+          if (!a.last_message_time && !b.last_message_time) return 0;
+          if (!a.last_message_time) return -1;
+          if (!b.last_message_time) return 1;
+          return new Date(a.last_message_time).getTime() - new Date(b.last_message_time).getTime();
+        });
+
         setConversations(convos);
       }
     } catch (error) {
@@ -154,7 +162,7 @@ const Chat = () => {
         .from('direct_messages')
         .select('*')
         .or(`and(sender_id.eq.${user?.id},receiver_id.eq.${targetUserId}),and(sender_id.eq.${targetUserId},receiver_id.eq.${user?.id})`)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: true });
 
       if (error) throw error;
       setMessages(data || []);
@@ -352,20 +360,24 @@ const Chat = () => {
                         </div>
                       ))
                     )}
-                    <div ref={messagesTopRef} />
+                    <div ref={messagesBottomRef} />
                   </div>
 
                   {/* Message Input */}
                   <div className="border-t pt-4 pb-20 lg:pb-4">
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 items-center">
                       <Input
                         placeholder="Send a loving message... 💕"
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                        className="flex-1"
+                        className="flex-1 min-w-0"
                       />
-                      <Button onClick={sendMessage} className="btn-hero">
+                      <Button 
+                        onClick={sendMessage} 
+                        className="btn-hero flex-shrink-0"
+                        size="sm"
+                      >
                         <Send className="h-4 w-4" />
                       </Button>
                     </div>

@@ -222,16 +222,16 @@ export const PostCard: React.FC<PostCardProps> = ({
 
         {showComments && (
           <div className="space-y-3 pt-3 border-t">
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
               <input
                 type="text"
                 placeholder="Write a comment..."
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
-                className="flex-1 px-3 py-2 text-sm border rounded-md"
+                className="flex-1 min-w-0 px-3 py-2 text-sm border rounded-md"
                 onKeyPress={(e) => e.key === 'Enter' && handleComment()}
               />
-              <Button size="sm" onClick={handleComment}>
+              <Button size="sm" onClick={handleComment} className="flex-shrink-0">
                 Post
               </Button>
             </div>

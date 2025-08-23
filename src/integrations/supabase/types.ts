@@ -478,6 +478,7 @@ export type Database = {
           full_name: string | null
           id: string
           profile_images: string[] | null
+          push_token: string | null
           updated_at: string | null
           user_id: string
         }
@@ -487,6 +488,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           profile_images?: string[] | null
+          push_token?: string | null
           updated_at?: string | null
           user_id: string
         }
@@ -496,6 +498,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           profile_images?: string[] | null
+          push_token?: string | null
           updated_at?: string | null
           user_id?: string
         }
@@ -735,6 +738,84 @@ export type Database = {
           max_score?: number
           score?: number
           user_id?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          id: string
+          user_id: string
+          title: string
+          body: string
+          type: string
+          data: Json
+          read: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          title: string
+          body: string
+          type?: string
+          data?: Json
+          read?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          title?: string
+          body?: string
+          type?: string
+          data?: Json
+          read?: boolean
+          created_at?: string
+        }
+        Relationships: []
+      }
+      friend_requests: {
+        Row: {
+          id: string
+          requester_id: string
+          recipient_id: string
+          status: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          requester_id: string
+          recipient_id: string
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          requester_id?: string
+          recipient_id?: string
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      unread_message_counts: {
+        Row: {
+          user_id: string
+          count: number
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          count?: number
+          updated_at?: string
+        }
+        Update: {
+          user_id?: string
+          count?: number
+          updated_at?: string
         }
         Relationships: []
       }
