@@ -29,17 +29,28 @@ CREATE TABLE story_reactions (
     UNIQUE(story_id, user_id)
 );
 
+-- Create story_replies table for replies to stories
+CREATE TABLE story_replies (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    story_id UUID NOT NULL REFERENCES user_stories(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Create indexes for better performance
 CREATE INDEX idx_user_stories_user_id ON user_stories(user_id);
 CREATE INDEX idx_user_stories_expires_at ON user_stories(expires_at);
 CREATE INDEX idx_user_stories_active ON user_stories(is_active);
 CREATE INDEX idx_story_views_story_id ON story_views(story_id);
 CREATE INDEX idx_story_reactions_story_id ON story_reactions(story_id);
+CREATE INDEX idx_story_replies_story_id ON story_replies(story_id);
 
 -- Enable RLS
 ALTER TABLE user_stories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE story_views ENABLE ROW LEVEL SECURITY;
 ALTER TABLE story_reactions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE story_replies ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies for user_stories
 CREATE POLICY "Users can view active stories" ON user_stories
@@ -72,6 +83,19 @@ CREATE POLICY "Users can update their own story reactions" ON story_reactions
     FOR UPDATE USING (auth.uid() = user_id);
 
 CREATE POLICY "Users can delete their own story reactions" ON story_reactions
+    FOR DELETE USING (auth.uid() = user_id);
+
+-- RLS Policies for story_replies
+CREATE POLICY "Users can view story replies" ON story_replies
+    FOR SELECT USING (true);
+
+CREATE POLICY "Users can insert their own story replies" ON story_replies
+    FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update their own story replies" ON story_replies
+    FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete their own story replies" ON story_replies
     FOR DELETE USING (auth.uid() = user_id);
 
 -- Function to automatically deactivate expired stories

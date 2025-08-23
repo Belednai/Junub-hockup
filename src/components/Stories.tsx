@@ -7,8 +7,19 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
-import { Plus, Heart, MessageCircle, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, Heart, MessageCircle, X, ChevronLeft, ChevronRight, Send } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+
+interface StoryReply {
+  id: string;
+  user_id: string;
+  content: string;
+  created_at: string;
+  profiles?: {
+    full_name?: string;
+    avatar_url?: string;
+  };
+}
 
 interface Story {
   id: string;
@@ -23,6 +34,7 @@ interface Story {
   };
   story_reactions?: { id: string; user_id: string; reaction_type: string }[];
   story_views?: { id: string; viewer_id: string }[];
+  story_replies?: StoryReply[];
 }
 
 interface StoryGroup {
@@ -294,6 +306,40 @@ export function Stories() {
     }
   };
 
+  const handleStoryReply = async () => {
+    if (!user || !replyText.trim() || !currentStoryGroup) return;
+
+    setIsReplying(true);
+    try {
+      const storyId = currentStoryGroup.stories[currentStoryIndex].id;
+      
+      await supabase
+        .from('story_replies')
+        .insert({
+          story_id: storyId,
+          user_id: user.id,
+          content: replyText.trim()
+        });
+
+      toast({
+        title: "Reply sent",
+        description: "Your reply has been sent successfully!",
+      });
+
+      setReplyText('');
+      fetchStories(); // Refresh to show the new reply
+    } catch (error) {
+      console.error('Error sending story reply:', error);
+      toast({
+        title: "Error",
+        description: "Failed to send reply",
+        variant: "destructive"
+      });
+    } finally {
+      setIsReplying(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex gap-4 p-4 overflow-x-auto">
@@ -475,7 +521,7 @@ export function Stories() {
 
               {/* Caption */}
               {currentStoryGroup.stories[currentStoryIndex].caption && (
-                <div className="absolute bottom-16 left-4 right-4 text-white">
+                <div className="absolute bottom-20 left-4 right-4 text-white">
                   <p className="bg-black/50 p-3 rounded">
                     {currentStoryGroup.stories[currentStoryIndex].caption}
                   </p>
