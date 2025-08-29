@@ -227,9 +227,9 @@ const Chat = () => {
   }
 
   return (
-    <div className="h-screen bg-white dark:bg-slate-900 flex">
+    <div className="flex h-screen pt-14 pb-16 lg:pb-0 bg-white dark:bg-slate-900">
       {/* Sidebar */}
-      <div className="w-80 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-700 flex flex-col">
+      <div className={`${selectedUser ? 'hidden md:flex' : 'flex'} w-full md:w-80 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-700 flex-col`}>
         {/* Header */}
         <div className="p-4 border-b border-slate-200 dark:border-slate-700">
           <div className="flex items-center justify-between mb-4">
@@ -260,6 +260,36 @@ const Chat = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 rounded-full bg-slate-100 dark:bg-slate-800 border-0 focus:ring-2 focus:ring-blue-500"
             />
+          </div>
+        </div>
+
+        {/* Active Users Section */}
+        <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-700">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
+              Active Now
+            </h3>
+          </div>
+          <div className="flex gap-3 overflow-x-auto pb-2">
+            {filteredConversations.slice(0, 8).map((conv) => (
+              <Link
+                key={`active-${conv.user_id}`}
+                to={`/chat/${conv.user_id}`}
+                className="flex-shrink-0 text-center group"
+              >
+                <div className="relative mb-2">
+                  <div className="w-14 h-14 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+                    <span className="text-white font-bold text-lg">
+                      {conv.full_name.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-slate-900"></div>
+                </div>
+                <p className="text-xs text-slate-600 dark:text-slate-400 truncate max-w-[56px]">
+                  {conv.full_name.split(' ')[0]}
+                </p>
+              </Link>
+            ))}
           </div>
         </div>
 
@@ -331,7 +361,7 @@ const Chat = () => {
       </div>
 
       {/* Chat Area */}
-      <div className="flex-1 flex flex-col bg-slate-50 dark:bg-slate-800">
+      <div className={`${selectedUser ? 'flex' : 'hidden md:flex'} flex-1 flex-col bg-slate-50 dark:bg-slate-800`}>
         {selectedUser ? (
           <>
             {/* Chat Header */}
@@ -342,7 +372,7 @@ const Chat = () => {
                     variant="ghost" 
                     size="sm" 
                     onClick={() => navigate('/chat')}
-                    className="lg:hidden rounded-full h-10 w-10 p-0"
+                    className="md:hidden rounded-full h-10 w-10 p-0"
                   >
                     <ArrowLeft className="h-5 w-5" />
                   </Button>
@@ -469,7 +499,7 @@ const Chat = () => {
             </div>
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center">
+          <div className="hidden md:flex flex-1 items-center justify-center">
             <div className="text-center">
               <MessageCircle className="h-20 w-20 mx-auto mb-6 text-slate-300 dark:text-slate-600" />
               <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
