@@ -581,26 +581,30 @@ export default function SocialFeed() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 overflow-x-hidden w-full">
-      <div className="w-full max-w-2xl mx-auto px-3 sm:px-4 py-6 sm:py-8 min-w-0">
-        {/* Navigation */}
-        <div className="flex justify-between items-center mb-6 sm:mb-8 min-w-0">
-          <h1 className="text-2xl sm:text-3xl font-bold text-heart truncate flex-shrink-0">Social Feed</h1>
-          <div className="hidden lg:flex gap-2 flex-shrink-0">
-            <Button variant="outline" onClick={() => navigate('/chat')}>
-              <MessageCircle className="h-4 w-4 mr-2" />
-              Chat
-            </Button>
-            <Button variant="outline" onClick={() => navigate('/find-friends')}>
-              <Users className="h-4 w-4 mr-2" />
-              Friends
-            </Button>
-            <Button variant="outline" onClick={() => navigate('/dashboard')}>
-              <Home className="h-4 w-4 mr-2" />
-              Dashboard
-            </Button>
+      {/* Sticky Navigation */}
+      <div className="sticky top-14 z-40 bg-gradient-to-br from-pink-50 to-purple-50/95 backdrop-blur-md border-b border-pink-100/50">
+        <div className="w-full max-w-2xl mx-auto px-3 sm:px-4 py-3 sm:py-4 min-w-0">
+          <div className="flex justify-between items-center min-w-0">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-heart truncate flex-shrink-0">Social Feed</h1>
+            <div className="hidden lg:flex gap-2 flex-shrink-0">
+              <Button variant="outline" size="sm" onClick={() => navigate('/chat')}>
+                <MessageCircle className="h-4 w-4 mr-2" />
+                Chat
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => navigate('/find-friends')}>
+                <Users className="h-4 w-4 mr-2" />
+                Friends
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => navigate('/dashboard')}>
+                <Home className="h-4 w-4 mr-2" />
+                Dashboard
+              </Button>
+            </div>
           </div>
         </div>
+      </div>
 
+      <div className="w-full max-w-2xl mx-auto px-3 sm:px-4 py-6 sm:py-8 min-w-0">
         {/* Stories Section */}
         <Stories />
 
@@ -649,20 +653,27 @@ export default function SocialFeed() {
           </CardContent>
         </Card>
 
-        {/* Feed Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="recent" className="flex items-center gap-2">
-              <Clock className="h-4 w-4" />
-              Recent
-            </TabsTrigger>
-            <TabsTrigger value="trending" className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" />
-              Trending
-            </TabsTrigger>
-          </TabsList>
+        {/* Sticky Feed Tabs */}
+        <div className="sticky top-[120px] sm:top-[140px] z-30 bg-gradient-to-br from-pink-50 to-purple-50 backdrop-blur-sm border-b border-pink-100/50 py-4 -mx-3 sm:-mx-4 px-3 sm:px-4 mb-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="grid w-full grid-cols-2 bg-white/80 backdrop-blur-sm">
+              <TabsTrigger value="recent" className="flex items-center gap-2 text-sm">
+                <Clock className="h-4 w-4" />
+                <span className="hidden sm:inline">Recent</span>
+                <span className="sm:hidden">New</span>
+              </TabsTrigger>
+              <TabsTrigger value="trending" className="flex items-center gap-2 text-sm">
+                <TrendingUp className="h-4 w-4" />
+                <span className="hidden sm:inline">Trending</span>
+                <span className="sm:hidden">Hot</span>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
 
-          <TabsContent value="recent" className="space-y-6 mt-6">
+        {/* Feed Content */}
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsContent value="recent" className="space-y-6">
             {posts.length === 0 ? (
               <Card>
                 <CardContent className="text-center py-8">
@@ -698,7 +709,7 @@ export default function SocialFeed() {
             )}
           </TabsContent>
 
-          <TabsContent value="trending" className="space-y-6 mt-6">
+          <TabsContent value="trending" className="space-y-6">
             {trendingPosts.length === 0 ? (
               <Card>
                 <CardContent className="text-center py-8">

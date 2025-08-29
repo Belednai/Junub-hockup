@@ -57,6 +57,8 @@ export function Stories() {
   const [caption, setCaption] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [replyText, setReplyText] = useState('');
+  const [isReplying, setIsReplying] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -354,7 +356,7 @@ export function Stories() {
 
   return (
     <>
-      <div className="bg-white border-b border-gray-200 p-4">
+      <div className="bg-gradient-to-br from-pink-50 to-purple-50 border-b border-pink-100/50 pt-8 px-4 pb-4 mb-6">
         <div className="flex gap-4 overflow-x-auto pb-2">
           {/* Add Story Button */}
           <div className="flex-shrink-0 flex flex-col items-center gap-2">
