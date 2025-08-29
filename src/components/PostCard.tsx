@@ -30,6 +30,7 @@ interface Post {
   caption: string;
   audio_url?: string;
   audio_duration?: number;
+  images?: string[];
   created_at: string;
   user_id: string;
   profiles?: {
@@ -166,6 +167,37 @@ export const PostCard: React.FC<PostCardProps> = ({
       
       <CardContent className="space-y-4 px-3 sm:px-6">
         <p className="text-sm break-words whitespace-pre-wrap word-wrap break-word hyphens-auto">{post.caption}</p>
+        
+        {/* Images - Instagram Style */}
+        {post.images && post.images.length > 0 && (
+          <div className="rounded-lg overflow-hidden bg-gray-100">
+            {post.images.length === 1 ? (
+              // Single image - full width, Instagram aspect ratio
+              <div className="relative w-full" style={{ aspectRatio: '4/5' }}>
+                <img
+                  src={post.images[0]}
+                  alt="Post image"
+                  className="w-full h-full object-cover cursor-pointer hover:opacity-95 transition-opacity"
+                  onClick={() => window.open(post.images[0], '_blank')}
+                />
+              </div>
+            ) : (
+              // Two images - side by side, Instagram style
+              <div className="grid grid-cols-2 gap-1" style={{ aspectRatio: '4/5' }}>
+                {post.images.slice(0, 2).map((image, index) => (
+                  <div key={index} className="relative h-full">
+                    <img
+                      src={image}
+                      alt={`Post image ${index + 1}`}
+                      className="w-full h-full object-cover cursor-pointer hover:opacity-95 transition-opacity"
+                      onClick={() => window.open(image, '_blank')}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
         
         {post.audio_url && (
           <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">

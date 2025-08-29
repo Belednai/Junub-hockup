@@ -14,7 +14,7 @@ interface ImageUploadProps {
 export const ImageUpload: React.FC<ImageUploadProps> = ({
   images,
   onImagesChange,
-  maxImages = 3,
+  maxImages = 2,
   disabled = false
 }) => {
   const { toast } = useToast();
