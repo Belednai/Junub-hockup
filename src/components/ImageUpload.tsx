@@ -2,7 +2,8 @@ import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
-import { ImagePlus, X, Upload } from 'lucide-react';
+import { ImagePlus, X, Upload, Loader2 } from 'lucide-react';
+import { compressImagesWithProgress, ImageCompressor } from '@/utils/imageCompression';
 
 interface ImageUploadProps {
   images: File[];
@@ -20,9 +21,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [isCompressing, setIsCompressing] = useState(false);
+  const [compressionProgress, setCompressionProgress] = useState({ completed: 0, total: 0 });
 
-  const handleFileSelect = (files: FileList | null) => {
-    if (!files) return;
+  const handleFileSelect = async (files: FileList | null) => {
+    if (!files || isCompressing) return;
 
     const newFiles = Array.from(files);
     const validFiles: File[] = [];
@@ -38,15 +41,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         continue;
       }
 
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        toast({
-          title: "File too large",
-          description: "Please select images smaller than 5MB",
-          variant: "destructive"
-        });
-        continue;
-      }
-
+      // Remove the size limit check since we'll compress automatically
       validFiles.push(file);
     }
 
@@ -64,7 +59,54 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     }
 
     if (validFiles.length > 0) {
-      onImagesChange([...images, ...validFiles]);
+      setIsCompressing(true);
+      setCompressionProgress({ completed: 0, total: validFiles.length });
+
+      try {
+        // Show initial toast for compression
+        toast({
+          title: "Processing images",
+          description: "Optimizing images for upload...",
+        });
+
+        // Compress images with progress tracking
+        const compressedFiles = await compressImagesWithProgress(
+          validFiles,
+          {
+            maxSizeBytes: 5 * 1024 * 1024, // 5MB target
+            maxWidth: 1920,
+            maxHeight: 1920,
+            quality: 0.8,
+            format: 'jpeg'
+          },
+          (completed, total) => {
+            setCompressionProgress({ completed, total });
+          }
+        );
+
+        // Calculate compression savings
+        const originalSize = validFiles.reduce((sum, file) => sum + file.size, 0);
+        const compressedSize = compressedFiles.reduce((sum, file) => sum + file.size, 0);
+        const savings = ((originalSize - compressedSize) / originalSize * 100).toFixed(1);
+
+        // Show success message with compression details
+        toast({
+          title: "Images optimized successfully",
+          description: `${compressedFiles.length} image(s) processed. Saved ${savings}% space (${ImageCompressor.formatFileSize(originalSize - compressedSize)})`,
+        });
+
+        onImagesChange([...images, ...compressedFiles]);
+      } catch (error) {
+        console.error('Error compressing images:', error);
+        toast({
+          title: "Compression failed",
+          description: "Failed to optimize images. Please try again or use smaller images.",
+          variant: "destructive"
+        });
+      } finally {
+        setIsCompressing(false);
+        setCompressionProgress({ completed: 0, total: 0 });
+      }
     }
   };
 
@@ -104,27 +146,43 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     <div className="space-y-4">
       {/* Upload Area */}
       <Card
-        className={`border-2 border-dashed transition-colors cursor-pointer ${
+        className={`border-2 border-dashed transition-colors ${
+          isCompressing ? 'cursor-not-allowed' : 'cursor-pointer'
+        } ${
           dragOver
             ? 'border-primary bg-primary/5'
             : 'border-muted-foreground/25 hover:border-primary/50'
-        } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+        } ${disabled || isCompressing ? 'opacity-50 cursor-not-allowed' : ''}`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        onClick={openFileDialog}
+        onClick={isCompressing ? undefined : openFileDialog}
       >
         <div className="p-6 text-center">
-          <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-          <p className="text-sm text-muted-foreground mb-1">
-            Drop images here or click to upload
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Maximum {maxImages} images, up to 5MB each
-          </p>
-          <p className="text-xs text-muted-foreground mt-1">
-            {images.length}/{maxImages} images selected
-          </p>
+          {isCompressing ? (
+            <>
+              <Loader2 className="h-8 w-8 mx-auto mb-2 text-primary animate-spin" />
+              <p className="text-sm text-muted-foreground mb-1">
+                Optimizing images...
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Processing {compressionProgress.completed}/{compressionProgress.total} images
+              </p>
+            </>
+          ) : (
+            <>
+              <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground mb-1">
+                Drop images here or click to upload
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Maximum {maxImages} images • Auto-optimized to 5MB
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {images.length}/{maxImages} images selected
+              </p>
+            </>
+          )}
         </div>
       </Card>
 
@@ -169,7 +227,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           ))}
           
           {/* Add more button if under limit */}
-          {images.length < maxImages && !disabled && (
+          {images.length < maxImages && !disabled && !isCompressing && (
             <Card
               className="border-2 border-dashed border-muted-foreground/25 hover:border-primary/50 cursor-pointer transition-colors"
               onClick={openFileDialog}
