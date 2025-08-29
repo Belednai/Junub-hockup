@@ -357,35 +357,127 @@ export default function SocialFeed() {
 
       // Upload audio if exists
       if (audioBlob) {
-        const audioFile = new File([audioBlob], `voice-${Date.now()}.wav`, { type: 'audio/wav' });
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('voice-notes')
-          .upload(`${user.id}/${audioFile.name}`, audioFile);
+        try {
+          // First, check if the voice-notes bucket exists
+          const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets();
+          const voiceNotesBucket = buckets?.find(bucket => bucket.name === 'voice-notes');
+          
+          if (!voiceNotesBucket) {
+            // Try to create the bucket first
+            const { data: createData, error: createError } = await supabase.storage
+              .createBucket('voice-notes', { 
+                public: true,
+                fileSizeLimit: 10485760, // 10MB
+                allowedMimeTypes: ['audio/wav', 'audio/mp3', 'audio/ogg', 'audio/webm']
+              });
+              
+            if (createError && !createError.message.includes('already exists')) {
+              throw new Error(`Voice notes storage bucket setup required. Please follow these steps:
 
-        if (uploadError) throw uploadError;
-        
-        const { data: { publicUrl } } = supabase.storage
-          .from('voice-notes')
-          .getPublicUrl(uploadData.path);
-        
-        audioUrl = publicUrl;
+1. Go to: https://supabase.com/dashboard/project/btsnjqeqyhcybiaiutop/storage/buckets
+2. Click "New bucket"
+3. Create bucket with name: voice-notes
+4. Set as Public: Yes
+5. File size limit: 10MB
+6. Allowed MIME types: audio/wav,audio/mp3,audio/ogg,audio/webm
+
+Then try uploading again.`);
+            }
+          }
+
+          const audioFile = new File([audioBlob], `voice-${Date.now()}.wav`, { type: 'audio/wav' });
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('voice-notes')
+            .upload(`${user.id}/${audioFile.name}`, audioFile);
+
+          if (uploadError) {
+            if (uploadError.message.includes('Bucket not found') || uploadError.message.includes('bucket does not exist')) {
+              throw new Error(`Voice notes storage bucket setup required. Please follow these steps:
+
+1. Go to: https://supabase.com/dashboard/project/btsnjqeqyhcybiaiutop/storage/buckets
+2. Click "New bucket"
+3. Create bucket with name: voice-notes
+4. Set as Public: Yes
+5. File size limit: 10MB
+6. Allowed MIME types: audio/wav,audio/mp3,audio/ogg,audio/webm
+
+Then try uploading again.`);
+            }
+            throw uploadError;
+          }
+          
+          const { data: { publicUrl } } = supabase.storage
+            .from('voice-notes')
+            .getPublicUrl(uploadData.path);
+          
+          audioUrl = publicUrl;
+        } catch (error) {
+          console.error('Voice note upload error:', error);
+          throw new Error(`Voice note upload failed: ${error.message}`);
+        }
       }
 
       // Upload images if exist
       if (selectedImages.length > 0) {
-        for (const image of selectedImages) {
-          const fileName = `${user.id}/${Date.now()}-${image.name}`;
-          const { data: uploadData, error: uploadError } = await supabase.storage
-            .from('post-images')
-            .upload(fileName, image);
+        try {
+          // First, check if the bucket exists
+          const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets();
+          const postImagesBucket = buckets?.find(bucket => bucket.name === 'post-images');
+          
+          if (!postImagesBucket) {
+            // Try to create the bucket first
+            const { data: createData, error: createError } = await supabase.storage
+              .createBucket('post-images', { 
+                public: true,
+                fileSizeLimit: 5242880, // 5MB
+                allowedMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+              });
+              
+            if (createError && !createError.message.includes('already exists')) {
+              throw new Error(`Storage bucket setup required. Please follow these steps:
 
-          if (uploadError) throw uploadError;
+1. Go to: https://supabase.com/dashboard/project/btsnjqeqyhcybiaiutop/storage/buckets
+2. Click "New bucket"
+3. Create bucket with name: post-images
+4. Set as Public: Yes
+5. File size limit: 5MB
+6. Allowed MIME types: image/jpeg,image/png,image/webp,image/gif
 
-          const { data: { publicUrl } } = supabase.storage
-            .from('post-images')
-            .getPublicUrl(uploadData.path);
+Then try uploading again.`);
+            }
+          }
 
-          imageUrls.push(publicUrl);
+          for (const image of selectedImages) {
+            const fileName = `${user.id}/${Date.now()}-${image.name}`;
+            const { data: uploadData, error: uploadError } = await supabase.storage
+              .from('post-images')
+              .upload(fileName, image);
+
+            if (uploadError) {
+              if (uploadError.message.includes('Bucket not found') || uploadError.message.includes('bucket does not exist')) {
+                throw new Error(`Storage bucket setup required. Please follow these steps:
+
+1. Go to: https://supabase.com/dashboard/project/btsnjqeqyhcybiaiutop/storage/buckets
+2. Click "New bucket"
+3. Create bucket with name: post-images
+4. Set as Public: Yes
+5. File size limit: 5MB
+6. Allowed MIME types: image/jpeg,image/png,image/webp,image/gif
+
+Then try uploading again.`);
+              }
+              throw uploadError;
+            }
+
+            const { data: { publicUrl } } = supabase.storage
+              .from('post-images')
+              .getPublicUrl(uploadData.path);
+
+            imageUrls.push(publicUrl);
+          }
+        } catch (error) {
+          console.error('Image upload error:', error);
+          throw new Error(`Image upload failed: ${error.message}`);
         }
       }
 
