@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Heart, MessageCircle, Send, Users, Home, ArrowLeft, Search, Phone, Video, Info, Smile, Plus, Image, Mic } from 'lucide-react';
+import { Heart, MessageCircle, Send, Users, Home, ArrowLeft, Search, Phone, Video, Info, Smile, Plus, Image, Mic, Check, CheckCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface DirectMessage {
@@ -15,6 +15,8 @@ interface DirectMessage {
   message: string;
   created_at: string;
   read_at?: string;
+  delivered_at?: string;
+  status?: 'sent' | 'delivered' | 'read';
 }
 
 interface Profile {
@@ -44,6 +46,7 @@ const Chat = () => {
   const [selectedUser, setSelectedUser] = useState<Profile | null>(null);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set());
   
   const messagesBottomRef = useRef<HTMLDivElement>(null);
 
@@ -56,6 +59,8 @@ const Chat = () => {
   useEffect(() => {
     if (user) {
       fetchConversations();
+      updateUserPresence(true);
+      fetchOnlineUsers();
       if (userId) {
         fetchUserProfile(userId);
         fetchMessages(userId);
@@ -67,8 +72,105 @@ const Chat = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Update user presence when component mounts/unmounts
+  useEffect(() => {
+    if (user) {
+      updateUserPresence(true);
+      
+      // Set up interval to update presence every 30 seconds
+      const presenceInterval = setInterval(() => {
+        updateUserPresence(true);
+      }, 30000);
+
+      // Set up interval to fetch online users every 10 seconds
+      const onlineUsersInterval = setInterval(() => {
+        fetchOnlineUsers();
+      }, 10000);
+
+      // Cleanup on unmount
+      return () => {
+        clearInterval(presenceInterval);
+        clearInterval(onlineUsersInterval);
+        updateUserPresence(false);
+      };
+    }
+  }, [user]);
+
   const scrollToBottom = () => {
     messagesBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const updateUserPresence = async (isOnline: boolean) => {
+    if (!user) return;
+    
+    try {
+      // Try to use the user_presence table if it exists, otherwise use a simple approach
+      const { error } = await supabase.rpc('update_user_presence', {
+        user_id_param: user.id,
+        is_online_param: isOnline
+      });
+
+      // If the function doesn't exist, fall back to updating profiles table
+      if (error && error.message.includes('function')) {
+        await supabase
+          .from('profiles')
+          .update({ 
+            updated_at: new Date().toISOString()
+          })
+          .eq('user_id', user.id);
+      }
+    } catch (error) {
+      console.error('Error updating user presence:', error);
+    }
+  };
+
+  const fetchOnlineUsers = async () => {
+    try {
+      // Try to fetch from user_presence table first
+      let { data, error } = await supabase
+        .from('user_presence')
+        .select('user_id')
+        .eq('is_online', true)
+        .gte('updated_at', new Date(Date.now() - 5 * 60 * 1000).toISOString()); // 5 minutes ago
+
+      // If user_presence table doesn't exist, use profiles table with recent activity
+      if (error && error.message.includes('relation')) {
+        const fallbackResult = await supabase
+          .from('profiles')
+          .select('user_id')
+          .gte('updated_at', new Date(Date.now() - 5 * 60 * 1000).toISOString()); // 5 minutes ago
+        
+        data = fallbackResult.data;
+      }
+
+      if (data) {
+        const onlineUserIds = new Set(data.map(item => item.user_id));
+        setOnlineUsers(onlineUserIds);
+      }
+    } catch (error) {
+      console.error('Error fetching online users:', error);
+    }
+  };
+
+  const getMessageStatusIcon = (message: DirectMessage) => {
+    if (message.sender_id !== user?.id) return null;
+    
+    const status = message.status || 'sent';
+    
+    switch (status) {
+      case 'sent':
+        return <Check className="h-3 w-3 text-slate-400" />;
+      case 'delivered':
+        return <CheckCheck className="h-3 w-3 text-slate-400" />;
+      case 'read':
+        return <CheckCheck className="h-3 w-3 text-blue-500" />;
+      default:
+        return <Check className="h-3 w-3 text-slate-400" />;
+    }
+  };
+
+  const isUserOnline = (userId: string) => {
+    return onlineUsers.has(userId);
   };
 
   const fetchConversations = async () => {
@@ -152,21 +254,53 @@ const Chat = () => {
   const fetchMessages = async (targetUserId: string) => {
     setLoadingMessages(true);
     try {
-      const { data, error } = await supabase
+      // Try to fetch with new columns first, fallback to basic columns if they don't exist
+      let { data, error } = await supabase
         .from('direct_messages')
-        .select('*')
+        .select('id, sender_id, receiver_id, message, created_at, read_at, delivered_at, status')
         .or(`and(sender_id.eq.${user?.id},receiver_id.eq.${targetUserId}),and(sender_id.eq.${targetUserId},receiver_id.eq.${user?.id})`)
         .order('created_at', { ascending: true });
 
-      if (error) throw error;
-      setMessages(data || []);
+      // If new columns don't exist, fallback to basic query
+      if (error && error.message.includes('column')) {
+        const fallbackResult = await supabase
+          .from('direct_messages')
+          .select('id, sender_id, receiver_id, message, created_at, read_at')
+          .or(`and(sender_id.eq.${user?.id},receiver_id.eq.${targetUserId}),and(sender_id.eq.${targetUserId},receiver_id.eq.${user?.id})`)
+          .order('created_at', { ascending: true });
+        
+        if (fallbackResult.error) throw fallbackResult.error;
+        
+        // Map fallback data to include missing fields
+        const fallbackMessages = (fallbackResult.data || []).map(msg => ({
+          ...msg,
+          status: msg.read_at ? 'read' : 'delivered',
+          delivered_at: null
+        })) as DirectMessage[];
+        
+        setMessages(fallbackMessages);
+      } else {
+        if (error) throw error;
+        
+        // Ensure all messages have the required fields with defaults
+        const messagesWithDefaults = (data || []).map((msg: any) => ({
+          ...msg,
+          status: msg.status || (msg.read_at ? 'read' : 'delivered'),
+          delivered_at: msg.delivered_at || null
+        })) as DirectMessage[];
+        
+        setMessages(messagesWithDefaults);
+      }
 
-      await supabase
-        .from('direct_messages')
-        .update({ read_at: new Date().toISOString() })
-        .eq('sender_id', targetUserId)
-        .eq('receiver_id', user?.id)
-        .is('read_at', null);
+      // Mark messages as read
+      if (user?.id) {
+        await supabase
+          .from('direct_messages')
+          .update({ read_at: new Date().toISOString() })
+          .eq('sender_id', targetUserId)
+          .eq('receiver_id', user.id)
+          .is('read_at', null);
+      }
 
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -271,7 +405,7 @@ const Chat = () => {
             </h3>
           </div>
           <div className="flex gap-3 overflow-x-auto pb-2">
-            {filteredConversations.slice(0, 8).map((conv) => (
+            {filteredConversations.filter(conv => isUserOnline(conv.user_id)).slice(0, 8).map((conv) => (
               <Link
                 key={`active-${conv.user_id}`}
                 to={`/chat/${conv.user_id}`}
@@ -290,6 +424,11 @@ const Chat = () => {
                 </p>
               </Link>
             ))}
+            {filteredConversations.filter(conv => isUserOnline(conv.user_id)).length === 0 && (
+              <p className="text-sm text-slate-500 dark:text-slate-400 py-4">
+                No friends are currently online
+              </p>
+            )}
           </div>
         </div>
 
@@ -328,7 +467,9 @@ const Chat = () => {
                         {conv.full_name.charAt(0).toUpperCase()}
                       </span>
                     </div>
-                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-3 border-white dark:border-slate-900"></div>
+                    {isUserOnline(conv.user_id) && (
+                      <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-3 border-white dark:border-slate-900"></div>
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
@@ -371,7 +512,10 @@ const Chat = () => {
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    onClick={() => navigate('/chat')}
+                    onClick={() => {
+                      setSelectedUser(null);
+                      navigate('/chat');
+                    }}
                     className="md:hidden rounded-full h-10 w-10 p-0"
                   >
                     <ArrowLeft className="h-5 w-5" />
@@ -385,7 +529,13 @@ const Chat = () => {
                     <h3 className="font-bold text-lg text-slate-900 dark:text-white">
                       {selectedUser.full_name || 'Love Friend'}
                     </h3>
-                    <p className="text-sm text-green-500 font-medium">Active now</p>
+                    <p className={`text-sm font-medium ${
+                      isUserOnline(selectedUser.user_id) 
+                        ? 'text-green-500' 
+                        : 'text-slate-500 dark:text-slate-400'
+                    }`}>
+                      {isUserOnline(selectedUser.user_id) ? 'Active now' : 'Last seen recently'}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -442,14 +592,27 @@ const Chat = () => {
                       )}
                       {!isOwn && !showAvatar && <div className="w-8" />}
                       
-                      <div
-                        className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
-                          isOwn
-                            ? 'bg-blue-500 text-white rounded-br-md'
-                            : 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white rounded-bl-md shadow-sm'
-                        }`}
-                      >
-                        <p className="break-words">{message.message}</p>
+                      <div className={`flex flex-col ${isOwn ? 'items-end' : 'items-start'}`}>
+                        <div
+                          className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
+                            isOwn
+                              ? 'bg-blue-500 text-white rounded-br-md'
+                              : 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white rounded-bl-md shadow-sm'
+                          }`}
+                        >
+                          <p className="break-words">{message.message}</p>
+                        </div>
+                        {isOwn && (
+                          <div className="flex items-center gap-1 mt-1 px-2">
+                            <span className="text-xs text-slate-500 dark:text-slate-400">
+                              {new Date(message.created_at).toLocaleTimeString([], {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </span>
+                            {getMessageStatusIcon(message)}
+                          </div>
+                        )}
                       </div>
                     </div>
                   );

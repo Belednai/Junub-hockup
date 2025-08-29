@@ -71,27 +71,54 @@ export type Database = {
       direct_messages: {
         Row: {
           created_at: string
+          delivered_at: string | null
           id: string
           message: string
           read_at: string | null
           receiver_id: string
           sender_id: string
+          status: string | null
         }
         Insert: {
           created_at?: string
+          delivered_at?: string | null
           id?: string
           message: string
           read_at?: string | null
           receiver_id: string
           sender_id: string
+          status?: string | null
         }
         Update: {
           created_at?: string
+          delivered_at?: string | null
           id?: string
           message?: string
           read_at?: string | null
           receiver_id?: string
           sender_id?: string
+          status?: string | null
+        }
+        Relationships: []
+      }
+      user_presence: {
+        Row: {
+          is_online: boolean | null
+          last_seen: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          is_online?: boolean | null
+          last_seen?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          is_online?: boolean | null
+          last_seen?: string | null
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
