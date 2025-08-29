@@ -2,27 +2,27 @@ import { Button } from "@/components/ui/button";
 import { Shuffle, Smile, Zap } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import moodImage from "@/assets/mood-refresher.jpg";
+import moodImage from "@/assets/b3.jpg";
 
 const moodBoosters = [
-  "Remember: You're single by choice. Bad choice, but still choice! 😂",
-  "Your love life is like WiFi - sometimes it works, sometimes it doesn't, but everyone keeps asking for the password.",
-  "Being single means you can eat the entire pizza without judgment. That's basically winning at life! 🍕",
-  "Love is in the air... but so is the WiFi signal, and that's more reliable.",
-  "You don't need a relationship status. You need a pizza delivery status.",
-  "Relationship tip: If you love someone, set them free. If they come back, change your locks.",
-  "Single and ready to... take a nap without anyone bothering me.",
-  "Love is like a good TV series - everyone talks about it, but most of it is just drama.",
-  "Why find your other half when you can be whole by yourself? Math doesn't lie! 🧮",
-  "Roses are red, violets are blue, I'm bad at poetry, coffee will do. ☕"
+  "Your perfect person is out there looking for someone exactly like you! Keep your heart open! 💕",
+  "Every day you're single is another day you're becoming the person your future partner will fall in love with.",
+  "Love finds you when you're ready for it. Use this time to become the best version of yourself! ✨",
+  "The right person will love your quirks, support your dreams, and make you feel like home.",
+  "You deserve a love that feels like sunshine on a cloudy day. Don't settle for less! ☀️",
+  "Being single means you're between chapters, not at the end of your love story.",
+  "Your heart knows what it wants. Trust the process and stay open to love! 💖",
+  "The best relationships start with self-love. You're already on the right path!",
+  "Someone out there is hoping to meet someone exactly like you today! 🌟",
+  "Love is not about finding someone to complete you, but someone to share your completeness with."
 ];
 
 const encouragements = [
-  "You're doing great! Keep laughing! 🌟",
-  "Laughter is the best medicine (and it's free)! 💊",
-  "Your sense of humor is your superpower! 🦸‍♀️",
-  "Keep smiling, you beautiful human! 😊",
-  "You just made your day 10% better! 📈"
+  "Your love story is still being written! 📖",
+  "You're worthy of deep, genuine love! 💕",
+  "Keep your heart open - magic happens! ✨",
+  "You're exactly where you need to be! 🌟",
+  "Love is coming your way! 💖"
 ];
 
 export const MoodRefresher = () => {
@@ -49,10 +49,10 @@ export const MoodRefresher = () => {
       <div className="container max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-5xl font-bold gradient-text mb-4">
-            Mood Refresher
+            Love Inspiration
           </h2>
           <p className="text-lg text-muted-foreground">
-            Need an instant laugh? We've got you covered!
+            Need some love encouragement? We've got you covered!
           </p>
         </div>
 
@@ -69,10 +69,10 @@ export const MoodRefresher = () => {
 
             <div className="space-y-4">
               <h3 className="text-2xl font-bold text-foreground">
-                Feeling down? Let's fix that!
+                Need some love inspiration? Let's lift your spirits!
               </h3>
               <p className="text-muted-foreground">
-                Click the button below for an instant dose of comedy and encouragement.
+                Click the button below for an instant dose of love encouragement and positivity.
               </p>
             </div>
 
@@ -90,8 +90,8 @@ export const MoodRefresher = () => {
               ) : (
                 <>
                   <Shuffle className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6" />
-                  <span className="hidden xs:inline">Refresh My Mood!</span>
-                  <span className="xs:hidden">Refresh Mood!</span>
+                  <span className="hidden xs:inline">Inspire My Heart!</span>
+                  <span className="xs:hidden">Inspire Me!</span>
                 </>
               )}
             </Button>
@@ -99,17 +99,17 @@ export const MoodRefresher = () => {
             <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
               <div className="flex items-center gap-1">
                 <Smile className="h-3 w-3 sm:h-4 sm:w-4 text-accent" />
-                <span>Instant Laughs</span>
+                <span>Love Inspiration</span>
               </div>
               <div className="w-1 h-1 bg-muted-foreground rounded-full"></div>
               <div className="flex items-center gap-1">
                 <Zap className="h-3 w-3 sm:h-4 sm:w-4 text-secondary" />
-                <span>Mood Boost</span>
+                <span>Heart Boost</span>
               </div>
               <div className="w-1 h-1 bg-muted-foreground rounded-full"></div>
               <div className="flex items-center gap-1">
                 <Shuffle className="h-3 w-3 sm:h-4 sm:w-4 text-primary" />
-                <span>Random Fun</span>
+                <span>Daily Positivity</span>
               </div>
             </div>
           </div>

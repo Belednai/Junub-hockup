@@ -2,81 +2,81 @@ import { Button } from "@/components/ui/button";
 import { RotateCcw, Lightbulb } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import dailyTipImage from "@/assets/daily-tip.jpg";
+import dailyTipImage from "@/assets/b2.jpg";
 
 const tips = [
   {
-    title: "The Netflix Defense",
-    tip: "Skipping his texts to watch Netflix is self-care. You're investing in your emotional wellbeing through quality television programming.",
-    category: "Self-Care"
-  },
-  {
-    title: "The Communication Formula",
-    tip: "Love is 50% communication, 50% guessing why they're mad, and 100% bad at math.",
-    category: "Math"
-  },
-  {
-    title: "The Holy Trinity",
-    tip: "Every healthy relationship needs three things: trust, laughter, and snacks. Preferably delivered.",
-    category: "Essentials"
-  },
-  {
-    title: "Reading the Signs",
-    tip: "If they reply with 'K', they're either busy or plotting your demise. There's no middle ground.",
+    title: "Active Listening",
+    tip: "True connection happens when you listen to understand, not to respond. Give your partner your full attention and watch your relationship flourish.",
     category: "Communication"
   },
   {
-    title: "The Apology Algorithm",
-    tip: "Say sorry first, figure out what you did wrong later. It's called relationship efficiency.",
-    category: "Strategy"
+    title: "Express Gratitude Daily",
+    tip: "Make it a habit to tell your partner one thing you appreciate about them every day. Gratitude strengthens the bond between two hearts.",
+    category: "Appreciation"
   },
   {
-    title: "Social Media Science",
-    tip: "Liking their ex's photos is not research, it's archaeology. And it's weird.",
-    category: "Social Skills"
+    title: "Quality Time Matters",
+    tip: "Put away distractions and spend focused time together. Even 15 minutes of undivided attention can strengthen your connection significantly.",
+    category: "Connection"
+  },
+  {
+    title: "Communicate Your Needs",
+    tip: "Your partner isn't a mind reader. Express your needs clearly and kindly - it's the foundation of a healthy relationship.",
+    category: "Honesty"
+  },
+  {
+    title: "Show Affection",
+    tip: "Small gestures of love - a hug, a kind note, or a gentle touch - can make your partner feel cherished and valued every day.",
+    category: "Love Language"
+  },
+  {
+    title: "Support Their Dreams",
+    tip: "Be your partner's biggest cheerleader. Supporting each other's goals and dreams creates a powerful foundation for lasting love.",
+    category: "Support"
   }
 ];
 
 const premiumTips = [
   {
-    title: "The Ghosting GPS",
-    tip: "If someone ghosts you, they're not lost - they're just exploring the wilderness of commitment phobia.",
-    category: "Dating Reality"
+    title: "Build Emotional Intimacy",
+    tip: "Share your fears, dreams, and vulnerabilities with your partner. Emotional intimacy creates deeper bonds than physical attraction alone.",
+    category: "Deep Connection"
   },
   {
-    title: "The Overthinking Olympics",
-    tip: "Gold medal goes to whoever can analyze a 'hey' text for 3 hours straight. You're all champions here.",
-    category: "Premium Anxiety"
+    title: "Practice Forgiveness",
+    tip: "Learn to forgive quickly and completely. Holding grudges poisons love, while forgiveness allows your relationship to grow stronger.",
+    category: "Healing"
   },
   {
-    title: "The Emoji Decoder",
-    tip: "😊 = I'm happy, 🙂 = I'm dead inside but polite, 😏 = I know something you don't (probably your password).",
-    category: "Digital Secrets"
+    title: "Create Shared Rituals",
+    tip: "Establish special traditions together - morning coffee, evening walks, or weekly date nights. These rituals become the heartbeat of your relationship.",
+    category: "Bonding"
   },
   {
-    title: "The Relationship GPS",
-    tip: "Love is like GPS - it recalculates constantly, sometimes takes you the long way, and occasionally stops working entirely.",
-    category: "Navigation"
+    title: "Respect Boundaries",
+    tip: "Healthy relationships have healthy boundaries. Respect your partner's need for space, friends, and individual interests.",
+    category: "Respect"
   },
   {
-    title: "The Commitment Compass",
-    tip: "Some people have a commitment phobia, others have commitment FOMO. Both are equally exhausting to date.",
-    category: "Premium Psychology"
+    title: "Grow Together",
+    tip: "Encourage each other's personal growth. The best relationships are where both people become better versions of themselves.",
+    category: "Growth"
   },
   {
-    title: "The Modern Romance Manual",
-    tip: "Sliding into DMs is the modern equivalent of sending a carrier pigeon, except the pigeon has read receipts.",
-    category: "Digital Age"
+    title: "Handle Conflict Wisely",
+    tip: "Disagreements are normal, but how you handle them matters. Focus on the issue, not attacking the person. Fight fair, love harder.",
+    category: "Conflict Resolution"
   },
   {
-    title: "The Self-Love Hack",
-    tip: "Treat yourself like you would treat your best friend - with pizza, patience, and terrible movie choices.",
-    category: "Premium Self-Care"
+    title: "Keep Romance Alive",
+    tip: "Don't let routine kill romance. Surprise each other, plan special dates, and never stop courting the person you love.",
+    category: "Romance"
   },
   {
-    title: "The Dating App Philosophy",
-    tip: "Swiping right is modern window shopping, except the windows swipe back and sometimes send unsolicited photos.",
-    category: "App Wisdom"
+    title: "Trust Your Instincts",
+    tip: "If something feels right in your heart, trust it. Your intuition often knows what your mind is still figuring out about love.",
+    category: "Intuition"
   }
 ];
 
@@ -102,12 +102,12 @@ export const DailyTip = () => {
       <div className="container max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-5xl font-bold gradient-text mb-4">
-            Daily Comic Tip {user && <span className="text-accent">Premium</span>}
+            Daily Love Tip {user && <span className="text-accent">Premium</span>}
           </h2>
           <p className="text-lg text-muted-foreground">
             {user 
-              ? "Exclusive questionable relationship wisdom for members!" 
-              : "Your daily dose of questionable relationship wisdom"
+              ? "Exclusive relationship wisdom to help you build lasting love!" 
+              : "Your daily dose of genuine relationship wisdom"
             }
           </p>
           {!user && (

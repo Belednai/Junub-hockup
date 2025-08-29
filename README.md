@@ -1,6 +1,6 @@
 # Junub-hockup App
 
-A social networking app for connecting people with features like social feed, messaging, voice notes, and image sharing.
+A relationship-focused social networking app designed to help people find their perfect partner through meaningful connections, compatibility matching, and genuine relationship building.
 
 ## Features
 

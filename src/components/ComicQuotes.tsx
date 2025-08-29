@@ -3,87 +3,87 @@ import { useAuth } from "@/hooks/useAuth";
 
 const quotes = [
   {
-    text: "Love is giving someone the power to destroy you and trusting them not to use it... immediately.",
-    author: "Anonymous Romantic",
-    category: "Trust Issues"
+    text: "The best relationships are built on trust, communication, and mutual respect. When you find someone who values these as much as you do, you've found something special.",
+    author: "Relationship Coach",
+    category: "Foundation"
   },
   {
-    text: "I love you more than pizza. And that's saying something because I REALLY love pizza.",
-    author: "Food Lover",
-    category: "Priorities"
+    text: "True love isn't about finding someone perfect, it's about finding someone perfect for you and growing together through life's journey.",
+    author: "Love Expert",
+    category: "Perfect Match"
   },
   {
-    text: "Relationship status: Committed to my bed and my Netflix account.",
-    author: "Modern Bachelor",
-    category: "Single Life"
+    text: "A healthy relationship is where both people feel safe to be vulnerable, express their feelings, and support each other's dreams.",
+    author: "Therapist",
+    category: "Healthy Love"
   },
   {
-    text: "Love is being stupid together. That's why some couples are really, really stupid.",
-    author: "Relationship Expert",
-    category: "Wisdom"
+    text: "The right person will love you for who you are while inspiring you to become the best version of yourself.",
+    author: "Dating Coach",
+    category: "Growth"
   },
   {
-    text: "I'm not arguing, I'm just explaining why I'm right. Again.",
-    author: "Every Couple Ever",
+    text: "Good communication is the bridge between confusion and clarity in any relationship. Listen with your heart, speak with kindness.",
+    author: "Counselor",
     category: "Communication"
   },
   {
-    text: "Marriage is when a man loses his bachelor's degree and gets a master's degree.",
-    author: "Married Guy",
-    category: "Marriage"
+    text: "When you find your person, you'll understand why it never worked out with anyone else. Everything happens for a reason.",
+    author: "Life Coach",
+    category: "Destiny"
   }
 ];
 
 const premiumQuotes = [
   {
-    text: "Love is sharing your popcorn. True love is sharing your WiFi password.",
-    author: "Digital Native",
-    category: "Modern Love"
+    text: "Soulmates aren't found, they're recognized. When you meet yours, your heart will know before your mind does.",
+    author: "Spiritual Guide",
+    category: "Soulmates"
   },
   {
-    text: "I love you even when you're hangry. That's real commitment.",
-    author: "Patient Partner",
-    category: "Unconditional Love"
+    text: "The most beautiful thing about love is that it multiplies when shared. Give love freely and watch it return tenfold.",
+    author: "Love Philosopher",
+    category: "Abundance"
   },
   {
-    text: "Couple goals: Being weird together and calling it normal.",
-    author: "Weird Couple",
-    category: "Goals"
+    text: "A strong relationship requires choosing to love each other even in those moments when you struggle to like each other.",
+    author: "Marriage Counselor",
+    category: "Commitment"
   },
   {
-    text: "Love is when you text each other at the same time and feel like soulmates.",
-    author: "Text Twins",
-    category: "Synchronicity"
+    text: "Your perfect partner is someone who sees your flaws and chooses to love you anyway, while helping you become better.",
+    author: "Relationship Expert",
+    category: "Acceptance"
   },
   {
-    text: "My love language is food delivery apps. Nothing says 'I love you' like ordering my favorite.",
-    author: "Hungry Heart",
-    category: "Premium Love"
+    text: "Love is not just a feeling, it's a choice you make every day. Choose to love, choose to forgive, choose to grow together.",
+    author: "Life Coach",
+    category: "Daily Choice"
   },
   {
-    text: "Relationship status: In a committed relationship with self-care Sunday and questionable life choices.",
-    author: "Self-Love Expert",
-    category: "Premium Single"
+    text: "The right relationship will feel like coming home to yourself. You'll be more you than you've ever been.",
+    author: "Self-Discovery Coach",
+    category: "Authenticity"
   },
   {
-    text: "Dating is like social media - everyone's showing their highlight reel and hiding their spam folder.",
-    author: "Digital Dater",
-    category: "Premium Reality"
+    text: "True intimacy is being completely known and completely loved. It's the courage to be vulnerable with the right person.",
+    author: "Intimacy Expert",
+    category: "Deep Connection"
   },
   {
-    text: "True love is when they still think you're cute after seeing your 3am anxiety Google searches.",
-    author: "Night Owl",
-    category: "Premium Acceptance"
+    text: "A healthy relationship is two whole people coming together to create something beautiful, not two halves trying to complete each other.",
+    author: "Wellness Coach",
+    category: "Wholeness"
   },
   {
-    text: "I'm not high maintenance, I'm premium subscription with exclusive features.",
-    author: "Value-Added Individual",
-    category: "Premium Self-Worth"
+    text: "Love is patient, love is kind, but most importantly, love is a verb. It's what you do, not just what you feel.",
+    author: "Relationship Mentor",
+    category: "Action"
   },
   {
-    text: "Love yourself first. Not because you should, but because the alternative is exhausting for everyone.",
-    author: "Reformed People-Pleaser",
-    category: "Premium Wisdom"
+    text: "The best love stories are written by two people who never stopped choosing each other, day after day, year after year.",
+    author: "Love Story Writer",
+    category: "Endurance"
   }
 ];
 
@@ -96,17 +96,17 @@ export const ComicQuotes = () => {
       <div className="container max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-5xl font-bold gradient-text mb-4">
-            Comic Quotes {user && <span className="text-accent">Premium</span>}
+            Love Wisdom {user && <span className="text-accent">Premium</span>}
           </h2>
           <p className="text-lg text-muted-foreground">
             {user 
-              ? `All ${displayQuotes.length} of our funniest relationship wisdom quotes!`
-              : "The funniest (and most questionable) relationship wisdom"
+              ? `All ${displayQuotes.length} inspiring quotes about finding and nurturing true love!`
+              : "Inspiring wisdom about love, relationships, and finding your perfect match"
             }
           </p>
           {!user && (
             <p className="text-sm text-accent mt-2">
-              Sign up to unlock {premiumQuotes.length} more premium quotes! ✨
+              Sign up to unlock {premiumQuotes.length} more premium love quotes! ✨
             </p>
           )}
         </div>
@@ -152,7 +152,7 @@ export const ComicQuotes = () => {
           <div className="inline-flex items-center gap-2 text-muted-foreground">
             <Heart className="h-4 w-4 text-secondary" />
             <span className="text-sm">
-              Remember: These are jokes, not actual relationship advice!
+              Let these words inspire your journey to finding true love!
             </span>
             <Heart className="h-4 w-4 text-secondary" />
           </div>
